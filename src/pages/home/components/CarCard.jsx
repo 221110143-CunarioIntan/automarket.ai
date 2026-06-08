@@ -1,19 +1,22 @@
+import { Link } from "react-router-dom";
 import { LuCar } from "react-icons/lu";
-import { fuelLabel, txLabel } from "@/lib/format";
+import { formatBrand, fuelLabel, txLabel } from "@/lib/format";
 import VehicleCard from "./VehicleCard";
 
 const CarCard = ({ car }) => (
-    <VehicleCard
-        title={`${car.brand} ${car.model}`}
-        year={car.year}
-        price={car.price_cash}
-        icon={<LuCar className="h-12 w-12 text-slate-400" />}
-        pills={[
-            car.body_type,
-            fuelLabel(car.fuel),
-            txLabel(car.transmission),
-        ]}
-    />
+    <Link to={`/vehicle/${car.id}`}>
+        <VehicleCard
+            title={`${formatBrand(car.brand)} ${car.model}`}
+            year={car.year}
+            price={car.price_cash}
+            icon={<LuCar className="h-12 w-12 text-slate-400" />}
+            pills={[
+                car.body_type,
+                fuelLabel(car.fuel),
+                txLabel(car.transmission),
+            ]}
+        />
+    </Link>
 );
 
 export default CarCard;

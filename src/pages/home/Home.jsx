@@ -1,7 +1,7 @@
 import { LuSearch, LuSlidersHorizontal } from "react-icons/lu";
-import cars from "@/data/cars.json";
-import motors from "@/data/motors.json";
 import { Button } from "@/components/ui";
+import { useFetchData } from "@/hooks";
+import { supabase } from "@/lib/supabase";
 import { sampleRandom } from "@/lib/random";
 import { CarCard, MotorCard } from "./components";
 
@@ -32,6 +32,16 @@ const POPULAR_BRANDS = [
     { name: "BYD", logo: "byd.png" },
     { name: "Wuling", logo: "wuling.png" },
 ];
+
+const fetchApprovedVehiclesByType = async (type) => {
+    const { data, error } = await supabase
+        .from("vehicles")
+        .select("*")
+        .eq("status", "APPROVED")
+        .eq("type", type);
+    if (error) throw error;
+    return sampleRandom(data, 8);
+};
 
 const Home = () => (
     <>
@@ -121,36 +131,74 @@ const PopularBrandSection = () => (
 );
 
 const CarRecommendationSection = () => {
-    const featured = sampleRandom(cars, 8);
+    const { data, loading, error } = useFetchData(
+        () => fetchApprovedVehiclesByType("CAR"),
+        [],
+    );
 
     return (
         <section className="mx-auto max-w-7xl px-6 pb-10">
             <h2 className="mb-4 text-lg font-bold text-slate-900">
                 Car Recommendation
             </h2>
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                {featured.map((car) => (
-                    <CarCard key={car.id} car={car} />
-                ))}
-            </div>
+            <VehicleGrid
+                items={data}
+                loading={loading}
+                error={error}
+                renderItem={(item) => <CarCard key={item.id} car={item} />}
+            />
         </section>
     );
 };
 
 const MotorRecommendationSection = () => {
-    const featured = sampleRandom(motors, 8);
+    const { data, loading, error } = useFetchData(
+        () => fetchApprovedVehiclesByType("MOTOR"),
+        [],
+    );
 
     return (
         <section className="mx-auto max-w-7xl px-6 pb-16">
             <h2 className="mb-4 text-lg font-bold text-slate-900">
                 Motor Recommendation
             </h2>
+            <VehicleGrid
+                items={data}
+                loading={loading}
+                error={error}
+                renderItem={(item) => <MotorCard key={item.id} motor={item} />}
+            />
+        </section>
+    );
+};
+
+const VehicleGrid = ({ items, loading, error, renderItem }) => {
+    if (loading) {
+        return (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-                {featured.map((motor) => (
-                    <MotorCard key={motor.id} motor={motor} />
+                {Array.from({ length: 8 }).map((_, i) => (
+                    <div
+                        key={i}
+                        className="aspect-4/3 animate-pulse rounded-xl bg-slate-200"
+                    />
                 ))}
             </div>
-        </section>
+        );
+    }
+    if (error) {
+        return (
+            <p className="text-sm text-red-600">
+                Failed to load: {error.message}
+            </p>
+        );
+    }
+    if (!items?.length) {
+        return <p className="text-sm text-slate-500">No vehicles found.</p>;
+    }
+    return (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {items.map(renderItem)}
+        </div>
     );
 };
 
