@@ -1,0 +1,150 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+    provider  = "postgresql"
+    url       = env("DATABASE_URL")
+    directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+    USER
+    ADMIN
+}
+
+enum VehicleType {
+    CAR
+    MOTOR
+}
+
+enum AdStatus {
+    PENDING
+    APPROVED
+    REJECTED
+}
+
+enum Brand {
+    // Japanese
+    DAIHATSU
+    DATSUN
+    HONDA
+    ISUZU
+    KAWASAKI
+    LEXUS
+    MAZDA
+    MITSUBISHI
+    NISSAN
+    SUBARU
+    SUZUKI
+    TOYOTA
+    YAMAHA
+    INFINITI
+    HINO
+
+    // Korean
+    HYUNDAI
+    KIA
+    SSANGYONG
+
+    // Chinese
+    BYD
+    CHERY
+    DFSK
+    MAXUS
+    MG
+    WULING
+
+    // German
+    AUDI
+    BMW
+    MERCEDES_BENZ
+    MINI
+    PORSCHE
+    VOLKSWAGEN
+
+    // British
+    JAGUAR
+    LAND_ROVER
+    RANGE_ROVER
+    TRIUMPH
+
+    // American
+    CHEVROLET
+    CHRYSLER
+    FORD
+    HARLEY_DAVIDSON
+    JEEP
+    TESLA
+
+    // Italian
+    DUCATI
+    FERRARI
+    LAMBORGHINI
+    PIAGGIO
+    VESPA
+
+    // French
+    CITROEN
+    PEUGEOT
+    RENAULT
+
+    // Indian
+    ROYAL_ENFIELD
+    TVS
+
+    // Swedish
+    VOLVO
+
+    // Austrian
+    KTM
+
+    // Taiwanese
+    KYMCO
+
+    // Other
+    BENELLI
+}
+
+model User {
+    id        String    @id @default(uuid()) @db.Uuid
+    email     String    @unique
+    name      String?
+    role      Role      @default(USER)
+    vehicles  Vehicle[] @relation("UserVehicles")
+    approvals Vehicle[] @relation("AdminApprovals")
+    createdAt DateTime  @default(now()) @map("created_at")
+    updatedAt DateTime  @updatedAt @map("updated_at")
+
+    @@map("users")
+}
+
+model Vehicle {
+    id           String      @id @default(uuid()) @db.Uuid
+    userId       String      @map("user_id") @db.Uuid
+    user         User        @relation("UserVehicles", fields: [userId], references: [id], onDelete: Cascade)
+    type         VehicleType
+    brand        Brand
+    model        String
+    year         Int
+    priceCash    BigInt      @map("price_cash")
+    bodyType     String      @map("body_type")
+    color        String?
+    transmission String
+    fuel         String?
+    mileage      Int
+    location     String?
+    engineCc     Int?        @map("engine_cc")
+    images       String[]    @default([])
+    status       AdStatus    @default(PENDING)
+    approvedById String?     @map("approved_by_id") @db.Uuid
+    approvedBy   User?       @relation("AdminApprovals", fields: [approvedById], references: [id])
+    approvedAt   DateTime?   @map("approved_at")
+    createdAt    DateTime    @default(now()) @map("created_at")
+    updatedAt    DateTime    @updatedAt @map("updated_at")
+
+    @@index([status, type])
+    @@index([brand])
+    @@map("vehicles")
+}
