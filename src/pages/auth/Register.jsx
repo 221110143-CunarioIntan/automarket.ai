@@ -1,7 +1,45 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Input, InputPassword } from "@/components/ui";
+import { supabase } from "@/lib/supabase";
 
 const Register = () => {
+    const navigate = useNavigate();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirm, setConfirm] = useState("");
+    const [agreed, setAgreed] = useState(false);
+    const [error, setError] = useState(null);
+    const [submitting, setSubmitting] = useState(false);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+
+        if (password !== confirm) {
+            setError("Passwords do not match.");
+            return;
+        }
+        if (!agreed) {
+            setError("You must agree to the Terms and Privacy Policy.");
+            return;
+        }
+
+        setSubmitting(true);
+        const { error: authError } = await supabase.auth.signUp({
+            email,
+            password,
+        });
+        setSubmitting(false);
+
+        if (authError) {
+            setError(authError.message);
+            return;
+        }
+
+        navigate("/login");
+    };
+
     return (
         <>
             <div className="mb-8 text-center">
@@ -13,13 +51,16 @@ const Register = () => {
                 </p>
             </div>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
                 <Input
                     label="Email"
                     id="email"
                     type="email"
                     autoComplete="email"
                     placeholder="Input your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
 
                 <InputPassword
@@ -27,6 +68,9 @@ const Register = () => {
                     id="password"
                     autoComplete="new-password"
                     placeholder="Input your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
                 />
 
                 <InputPassword
@@ -34,9 +78,15 @@ const Register = () => {
                     id="confirm-password"
                     autoComplete="new-password"
                     placeholder="Re-enter your password"
+                    value={confirm}
+                    onChange={(e) => setConfirm(e.target.value)}
+                    required
                 />
 
-                <Checkbox>
+                <Checkbox
+                    checked={agreed}
+                    onChange={(e) => setAgreed(e.target.checked)}
+                >
                     I agree to the{" "}
                     <a
                         href="#"
@@ -53,8 +103,18 @@ const Register = () => {
                     </a>
                 </Checkbox>
 
-                <Button type="submit" className="mt-4 w-full">
-                    Register
+                {error && (
+                    <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+                        {error}
+                    </p>
+                )}
+
+                <Button
+                    type="submit"
+                    className="mt-4 w-full"
+                    disabled={submitting}
+                >
+                    {submitting ? "Creating account..." : "Register"}
                 </Button>
             </form>
 
