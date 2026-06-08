@@ -5,6 +5,7 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
     const [session, setSession] = useState(null);
+    const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,9 +21,30 @@ export const AuthProvider = ({ children }) => {
         return () => data.subscription.unsubscribe();
     }, []);
 
+    useEffect(() => {
+        if (!session?.user) {
+            setProfile(null);
+            return;
+        }
+        let cancelled = false;
+        supabase
+            .from("users")
+            .select("id, email, name, role")
+            .eq("id", session.user.id)
+            .single()
+            .then(({ data }) => {
+                if (!cancelled) setProfile(data);
+            });
+        return () => {
+            cancelled = true;
+        };
+    }, [session]);
+
     const value = {
         session,
         user: session?.user ?? null,
+        profile,
+        role: profile?.role ?? null,
         loading,
         signOut: () => supabase.auth.signOut(),
     };

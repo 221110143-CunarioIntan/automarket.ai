@@ -1,10 +1,17 @@
 import { Link } from "react-router-dom";
-import { LuChevronDown, LuMapPin, LuUser } from "react-icons/lu";
-import { LogoText } from "@/components/ui";
+import {
+    LuChevronDown,
+    LuLayoutDashboard,
+    LuLogOut,
+    LuMapPin,
+    LuPlus,
+    LuSquareUser,
+} from "react-icons/lu";
+import { Avatar, Dropdown, LogoText } from "@/components/ui";
 import { useAuth } from "@/contexts";
 
 const Navbar = () => {
-    const { user, signOut, loading } = useAuth();
+    const { user, profile, signOut, loading } = useAuth();
 
     return (
         <header className="border-b border-slate-200 bg-white">
@@ -42,21 +49,11 @@ const Navbar = () => {
                         <span>Medan, North Sumatera</span>
                     </div>
                     {loading ? null : user ? (
-                        <div className="flex items-center gap-3">
-                            <div className="flex items-center gap-1.5 text-slate-700">
-                                <LuUser className="h-4 w-4" />
-                                <span className="max-w-40 truncate">
-                                    {user.email}
-                                </span>
-                            </div>
-                            <button
-                                type="button"
-                                onClick={signOut}
-                                className="font-medium text-slate-900 hover:text-blue-600"
-                            >
-                                Logout
-                            </button>
-                        </div>
+                        <UserMenu
+                            user={user}
+                            profile={profile}
+                            onSignOut={signOut}
+                        />
                     ) : (
                         <Link
                             to="/login"
@@ -68,6 +65,76 @@ const Navbar = () => {
                 </div>
             </div>
         </header>
+    );
+};
+
+const UserMenu = ({ user, profile, onSignOut }) => {
+    const displayName = profile?.name || user.email;
+    const role = profile?.role;
+
+    return (
+        <Dropdown
+            trigger={
+                <button
+                    type="button"
+                    className="flex items-center rounded-full focus:outline-none focus:ring-2 focus:ring-blue-100"
+                >
+                    <Avatar name={profile?.name} email={user.email} />
+                </button>
+            }
+        >
+            <Dropdown.Header>
+                <div className="flex items-center gap-3">
+                    <Avatar
+                        name={profile?.name}
+                        email={user.email}
+                        size="md"
+                    />
+                    <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold text-slate-900">
+                            {displayName}
+                        </p>
+                        <p className="truncate text-xs text-slate-500">
+                            {user.email}
+                        </p>
+                    </div>
+                </div>
+            </Dropdown.Header>
+
+            {role === "ADMIN" ? (
+                <Dropdown.Item
+                    to="/admin/dashboard"
+                    icon={<LuLayoutDashboard className="h-4 w-4" />}
+                >
+                    Dashboard
+                </Dropdown.Item>
+            ) : (
+                <>
+                    <Dropdown.Item
+                        to="/post-iklan"
+                        icon={<LuPlus className="h-4 w-4" />}
+                    >
+                        Post Iklan
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        to="/my-iklan"
+                        icon={<LuSquareUser className="h-4 w-4" />}
+                    >
+                        My Iklan
+                    </Dropdown.Item>
+                </>
+            )}
+
+            <Dropdown.Divider />
+
+            <Dropdown.Item
+                onClick={onSignOut}
+                icon={<LuLogOut className="h-4 w-4" />}
+                className="text-red-600 hover:bg-red-50"
+            >
+                Logout
+            </Dropdown.Item>
+        </Dropdown>
     );
 };
 
