@@ -23,6 +23,7 @@ enum AdStatus {
     PENDING
     APPROVED
     REJECTED
+    TAKEN_DOWN
 }
 
 enum Brand {
