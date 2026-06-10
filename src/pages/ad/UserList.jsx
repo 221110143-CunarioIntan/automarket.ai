@@ -1,24 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import { LuBike, LuCar, LuInbox, LuPlus } from "react-icons/lu";
-import { Button, EmptyState } from "@/components/ui";
+import { Badge, Button, EmptyState } from "@/components/ui";
 import { useAuth } from "@/contexts";
 import { useFetchData } from "@/hooks";
+import { AD_STATUS_COLOR, AD_STATUS_LABEL } from "@/lib/enums";
 import { formatBrand, formatCurrency } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
-
-const STATUS_BADGE = {
-    PENDING: "bg-yellow-100 text-yellow-700",
-    APPROVED: "bg-green-100 text-green-700",
-    REJECTED: "bg-red-100 text-red-700",
-    TAKEN_DOWN: "bg-orange-100 text-orange-700",
-};
-
-const STATUS_LABEL = {
-    PENDING: "Menunggu Persetujuan",
-    APPROVED: "Disetujui",
-    REJECTED: "Ditolak",
-    TAKEN_DOWN: "Iklan Ditutup",
-};
 
 const fetchMyVehicles = async (userId) => {
     const { data, error } = await supabase
@@ -30,7 +17,7 @@ const fetchMyVehicles = async (userId) => {
     return data;
 };
 
-const List = () => {
+const UserList = () => {
     const navigate = useNavigate();
     const { user, loading: authLoading } = useAuth();
 
@@ -40,10 +27,10 @@ const List = () => {
         return null;
     }
 
-    return <ListContent userId={user.id} />;
+    return <UserListContent userId={user.id} />;
 };
 
-const ListContent = ({ userId }) => {
+const UserListContent = ({ userId }) => {
     const { data, loading, error } = useFetchData(
         () => fetchMyVehicles(userId),
         [userId],
@@ -102,57 +89,56 @@ const ListContent = ({ userId }) => {
 const VehicleRow = ({ vehicle }) => {
     const Icon = vehicle.type === "CAR" ? LuCar : LuBike;
     return (
-        <li className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4">
-            <div className="flex h-20 w-28 shrink-0 items-center justify-center rounded-lg bg-slate-200">
-                <Icon className="h-10 w-10 text-slate-400" />
-            </div>
+        <li>
+            <Link
+                to={`/ads/mine/${vehicle.id}`}
+                className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm"
+            >
+                <div className="flex h-20 w-28 shrink-0 items-center justify-center rounded-lg bg-slate-200">
+                    <Icon className="h-10 w-10 text-slate-400" />
+                </div>
 
-            <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-3">
-                    <div>
-                        <h3 className="font-semibold text-slate-900">
-                            {formatBrand(vehicle.brand)} {vehicle.model}{" "}
-                            <span className="font-bold">({vehicle.year})</span>
-                        </h3>
-                        <p className="mt-0.5 text-sm font-bold text-slate-900">
-                            {formatCurrency(vehicle.price_cash)}
-                        </p>
+                <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-3">
+                        <div>
+                            <h3 className="font-semibold text-slate-900">
+                                {formatBrand(vehicle.brand)} {vehicle.model}{" "}
+                                <span className="font-bold">
+                                    ({vehicle.year})
+                                </span>
+                            </h3>
+                            <p className="mt-0.5 text-sm font-bold text-slate-900">
+                                {formatCurrency(vehicle.price_cash)}
+                            </p>
+                        </div>
+                        <Badge
+                            color={AD_STATUS_COLOR[vehicle.status]}
+                            className="shrink-0"
+                        >
+                            {AD_STATUS_LABEL[vehicle.status]}
+                        </Badge>
                     </div>
-                    <span
-                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-medium ${STATUS_BADGE[vehicle.status]}`}
-                    >
-                        {STATUS_LABEL[vehicle.status]}
-                    </span>
+                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
+                        <span>{vehicle.body_type}</span>
+                        <span>·</span>
+                        <span>{vehicle.transmission}</span>
+                        {vehicle.mileage && (
+                            <>
+                                <span>·</span>
+                                <span>
+                                    {vehicle.mileage.toLocaleString("id-ID")} km
+                                </span>
+                            </>
+                        )}
+                        {vehicle.location && (
+                            <>
+                                <span>·</span>
+                                <span>{vehicle.location}</span>
+                            </>
+                        )}
+                    </div>
                 </div>
-                <div className="mt-2 flex flex-wrap gap-3 text-xs text-slate-500">
-                    <span>{vehicle.body_type}</span>
-                    <span>·</span>
-                    <span>{vehicle.transmission}</span>
-                    {vehicle.mileage && (
-                        <>
-                            <span>·</span>
-                            <span>
-                                {vehicle.mileage.toLocaleString("id-ID")} km
-                            </span>
-                        </>
-                    )}
-                    {vehicle.location && (
-                        <>
-                            <span>·</span>
-                            <span>{vehicle.location}</span>
-                        </>
-                    )}
-                </div>
-            </div>
-
-            {vehicle.status === "APPROVED" && (
-                <Link
-                    to={`/vehicle/${vehicle.id}`}
-                    className="text-sm font-medium text-blue-600 hover:underline"
-                >
-                    Lihat
-                </Link>
-            )}
+            </Link>
         </li>
     );
 };
@@ -168,4 +154,4 @@ const ListSkeleton = () => (
     </ul>
 );
 
-export default List;
+export default UserList;

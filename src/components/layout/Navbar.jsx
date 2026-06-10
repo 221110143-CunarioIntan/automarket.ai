@@ -106,18 +106,18 @@ const UserMenu = ({ user, profile, onSignOut }) => {
                     to="/admin/dashboard"
                     icon={<LuLayoutDashboard className="h-4 w-4" />}
                 >
-                    Dashboard
+                    Admin Dashboard
                 </Dropdown.Item>
             ) : (
                 <>
                     <Dropdown.Item
-                        to="/post-iklan"
+                        to="/ads/create"
                         icon={<LuPlus className="h-4 w-4" />}
                     >
                         Post Iklan
                     </Dropdown.Item>
                     <Dropdown.Item
-                        to="/my-iklan"
+                        to="/ads/mine"
                         icon={<LuSquareUser className="h-4 w-4" />}
                     >
                         My Iklan

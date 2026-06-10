@@ -1,48 +1,21 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, Select } from "@/components/ui";
+import { Button, Input, InputNumber, Select } from "@/components/ui";
 import { useAuth } from "@/contexts";
-import { formatBrand } from "@/lib/format";
+import {
+    BRAND_OPTIONS,
+    CAR_BODY_OPTIONS,
+    FUEL_OPTIONS,
+    MOTOR_BODY_OPTIONS,
+    TRANSMISSION_OPTIONS,
+    VEHICLE_TYPE_OPTIONS,
+} from "@/lib/enums";
 import { supabase } from "@/lib/supabase";
-
-const BRAND_OPTIONS = [
-    "TOYOTA", "HONDA", "DAIHATSU", "MITSUBISHI", "SUZUKI", "NISSAN",
-    "MAZDA", "HYUNDAI", "KIA", "LEXUS", "ISUZU", "DATSUN",
-    "BMW", "MERCEDES_BENZ", "AUDI", "VOLKSWAGEN", "MINI", "PORSCHE",
-    "JAGUAR", "LAND_ROVER", "RANGE_ROVER",
-    "FORD", "CHEVROLET", "JEEP", "TESLA",
-    "BYD", "WULING", "CHERY", "MG", "DFSK",
-    "YAMAHA", "KAWASAKI", "VESPA", "PIAGGIO",
-    "HARLEY_DAVIDSON", "ROYAL_ENFIELD", "DUCATI", "KTM", "BENELLI",
-    "SUBARU", "INFINITI", "VOLVO", "PEUGEOT", "RENAULT", "CITROEN",
-].map((b) => ({ value: b, label: formatBrand(b) }));
-
-const TYPE_OPTIONS = [
-    { value: "CAR", label: "Mobil" },
-    { value: "MOTOR", label: "Motor" },
-];
-
-const CAR_BODY_OPTIONS = [
-    "SUV", "MPV", "Sedan", "Hatchback", "Pickup", "Van", "Coupe",
-    "Convertible", "MINIBUS", "JEEP",
-].map((b) => ({ value: b, label: b }));
-
-const MOTOR_BODY_OPTIONS = [
-    "Bebek", "Skuter", "Sport", "Trail", "Naked", "Cruiser",
-].map((b) => ({ value: b, label: b }));
-
-const TRANSMISSION_OPTIONS = [
-    "Manual", "Automatic", "Kopling",
-].map((t) => ({ value: t, label: t }));
-
-const FUEL_OPTIONS = [
-    "Gasoline", "Diesel", "Electric", "Hybrid",
-].map((f) => ({ value: f, label: f }));
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-const Create = () => {
+const UserCreate = () => {
     const navigate = useNavigate();
     const { user, loading: authLoading } = useAuth();
     const [submitError, setSubmitError] = useState(null);
@@ -123,7 +96,7 @@ const Create = () => {
                                     label="Type"
                                     required
                                     error={fieldState.error?.message}
-                                    options={TYPE_OPTIONS}
+                                    options={VEHICLE_TYPE_OPTIONS}
                                     value={field.value}
                                     onChange={field.onChange}
                                 />
@@ -247,21 +220,27 @@ const Create = () => {
                             error={errors.engine_cc?.message}
                             {...register("engine_cc")}
                         />
-                        <Input
-                            label="Mileage (km)"
-                            id="mileage"
-                            type="number"
-                            required
-                            placeholder="e.g. 50000"
-                            min={0}
-                            error={errors.mileage?.message}
-                            {...register("mileage", {
+                        <Controller
+                            control={control}
+                            name="mileage"
+                            rules={{
                                 required: "Mileage wajib diisi",
                                 min: {
                                     value: 0,
                                     message: "Mileage tidak boleh negatif",
                                 },
-                            })}
+                            }}
+                            render={({ field, fieldState }) => (
+                                <InputNumber
+                                    label="Mileage (km)"
+                                    id="mileage"
+                                    required
+                                    placeholder="e.g. 50.000"
+                                    error={fieldState.error?.message}
+                                    value={field.value ?? ""}
+                                    onChange={field.onChange}
+                                />
+                            )}
                         />
                         <Input
                             label="Color"
@@ -275,21 +254,27 @@ const Create = () => {
 
                 <FormSection title="Harga & Lokasi">
                     <div className="grid grid-cols-2 gap-4">
-                        <Input
-                            label="Harga (Rp)"
-                            id="price_cash"
-                            type="number"
-                            required
-                            placeholder="e.g. 150000000"
-                            min={1}
-                            error={errors.price_cash?.message}
-                            {...register("price_cash", {
+                        <Controller
+                            control={control}
+                            name="price_cash"
+                            rules={{
                                 required: "Harga wajib diisi",
                                 min: {
                                     value: 1,
                                     message: "Harga harus lebih dari 0",
                                 },
-                            })}
+                            }}
+                            render={({ field, fieldState }) => (
+                                <InputNumber
+                                    label="Harga (Rp)"
+                                    id="price_cash"
+                                    required
+                                    placeholder="e.g. 150.000.000"
+                                    error={fieldState.error?.message}
+                                    value={field.value ?? ""}
+                                    onChange={field.onChange}
+                                />
+                            )}
                         />
                         <Input
                             label="Lokasi"
@@ -377,4 +362,4 @@ const FormSection = ({ title, children }) => (
     </div>
 );
 
-export default Create;
+export default UserCreate;

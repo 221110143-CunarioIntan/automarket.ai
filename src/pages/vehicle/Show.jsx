@@ -8,7 +8,7 @@ import {
     LuHeart,
     LuShare2,
 } from "react-icons/lu";
-import { Button } from "@/components/ui";
+import { Button, ErrorState, NotFoundState } from "@/components/ui";
 import { useFetchData } from "@/hooks";
 import {
     formatBrand,
@@ -49,8 +49,40 @@ const Show = () => {
     );
 
     if (loading) return <ShowSkeleton />;
-    if (error) return <ErrorState message={error.message} />;
-    if (!vehicle) return <NotFoundState />;
+    if (error)
+        return (
+            <div className="mx-auto max-w-7xl px-6 py-16">
+                <ErrorState
+                    title="Failed to load vehicle"
+                    description={error.message}
+                    action={
+                        <Link
+                            to="/"
+                            className="font-medium text-blue-600 hover:underline"
+                        >
+                            ← Back to home
+                        </Link>
+                    }
+                />
+            </div>
+        );
+    if (!vehicle)
+        return (
+            <div className="mx-auto max-w-7xl px-6 py-16">
+                <NotFoundState
+                    title="Vehicle not found"
+                    description="The vehicle you are looking for might have been removed or never existed."
+                    action={
+                        <Link
+                            to="/"
+                            className="font-medium text-blue-600 hover:underline"
+                        >
+                            ← Back to home
+                        </Link>
+                    }
+                />
+            </div>
+        );
 
     return (
         <div className="mx-auto max-w-7xl px-6 py-8">
@@ -307,35 +339,5 @@ const ShowSkeleton = () => (
     </div>
 );
 
-const ErrorState = ({ message }) => (
-    <div className="mx-auto max-w-7xl px-6 py-16 text-center">
-        <p className="text-lg font-medium text-red-600">
-            Failed to load vehicle
-        </p>
-        <p className="mt-2 text-sm text-slate-500">{message}</p>
-        <Link
-            to="/"
-            className="mt-6 inline-block font-medium text-blue-600 hover:underline"
-        >
-            ← Back to home
-        </Link>
-    </div>
-);
-
-const NotFoundState = () => (
-    <div className="mx-auto max-w-7xl px-6 py-16 text-center">
-        <p className="text-lg font-medium text-slate-900">Vehicle not found</p>
-        <p className="mt-2 text-sm text-slate-500">
-            The vehicle you are looking for might have been removed or never
-            existed.
-        </p>
-        <Link
-            to="/"
-            className="mt-6 inline-block font-medium text-blue-600 hover:underline"
-        >
-            ← Back to home
-        </Link>
-    </div>
-);
 
 export default Show;
