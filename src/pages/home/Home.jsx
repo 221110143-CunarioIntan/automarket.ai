@@ -1,3 +1,5 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { LuSearch, LuSlidersHorizontal } from "react-icons/lu";
 import { Button } from "@/components/ui";
 import { useFetchData } from "@/hooks";
@@ -52,57 +54,78 @@ const Home = () => (
     </>
 );
 
-const HeroSection = () => (
-    <section className="relative">
-        <div className="relative h-120 w-full overflow-hidden">
-            <img
-                src="/images/home-hero.webp"
-                alt=""
-                className="h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/30" />
-            <div className="absolute inset-0 flex items-center justify-center px-6">
-                <h1 className="max-w-2xl text-center text-4xl font-extrabold tracking-wider text-white drop-shadow-lg md:text-5xl">
-                    EXPLORE THE NEW EXPERIENCE OF AUTOMOTIVE ONLINE SHOP
-                </h1>
-            </div>
-        </div>
+const HeroSection = () => {
+    const navigate = useNavigate();
+    const [input, setInput] = useState("");
 
-        <div className="relative z-10 mx-auto -mt-12 max-w-4xl px-6">
-            <div className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-slate-200">
-                <div className="flex items-center gap-3">
-                    <LuSearch className="h-5 w-5 text-slate-400" />
-                    <input
-                        type="text"
-                        placeholder="Find you vehicle's using AI"
-                        className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
-                    />
-                    <button
-                        type="button"
-                        className="text-slate-400 hover:text-slate-600"
-                        aria-label="Filter"
-                    >
-                        <LuSlidersHorizontal className="h-5 w-5" />
-                    </button>
-                    <Button className="px-6">Search</Button>
+    const submit = (value) => {
+        const q = value.trim();
+        navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
+    };
+
+    return (
+        <section className="relative">
+            <div className="relative h-120 w-full overflow-hidden">
+                <img
+                    src="/images/home-hero.webp"
+                    alt=""
+                    className="h-full w-full object-cover"
+                />
+                <div className="absolute inset-0 bg-black/30" />
+                <div className="absolute inset-0 flex items-center justify-center px-6">
+                    <h1 className="max-w-2xl text-center text-4xl font-extrabold tracking-wider text-white drop-shadow-lg md:text-5xl">
+                        EXPLORE THE NEW EXPERIENCE OF AUTOMOTIVE ONLINE SHOP
+                    </h1>
                 </div>
+            </div>
 
-                <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-100 pt-3 text-sm">
-                    <span aria-hidden="true">🔥</span>
-                    {POPULAR_SEARCHES.map((term) => (
+            <div className="relative z-10 mx-auto -mt-12 max-w-4xl px-6">
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault();
+                        submit(input);
+                    }}
+                    className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-slate-200"
+                >
+                    <div className="flex items-center gap-3">
+                        <LuSearch className="h-5 w-5 text-slate-400" />
+                        <input
+                            type="text"
+                            placeholder="Find your vehicle using AI"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                        />
                         <button
-                            key={term}
                             type="button"
-                            className="text-slate-600 hover:text-blue-600"
+                            className="text-slate-400 hover:text-slate-600"
+                            aria-label="Filter"
                         >
-                            {term}
+                            <LuSlidersHorizontal className="h-5 w-5" />
                         </button>
-                    ))}
-                </div>
+                        <Button type="submit" className="px-6">
+                            Search
+                        </Button>
+                    </div>
+
+                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-100 pt-3 text-sm">
+                        <span aria-hidden="true">🔥</span>
+                        {POPULAR_SEARCHES.map((term) => (
+                            <button
+                                key={term}
+                                type="button"
+                                onClick={() => submit(term)}
+                                className="text-slate-600 hover:text-blue-600"
+                            >
+                                {term}
+                            </button>
+                        ))}
+                    </div>
+                </form>
             </div>
-        </div>
-    </section>
-);
+        </section>
+    );
+};
 
 const PopularBrandSection = () => (
     <section className="py-10">

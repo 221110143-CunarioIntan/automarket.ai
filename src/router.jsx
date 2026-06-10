@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
-import { AdminShell, AuthShell, MainShell } from "@/layouts";
+import { AdminShell, AuthShell, MainShell, SearchShell } from "@/layouts";
 import {
     AdminList,
     AdminShow,
@@ -10,6 +10,7 @@ import {
 import { AdminDashboard } from "@/pages/admin";
 import * as Auth from "@/pages/auth";
 import { Home } from "@/pages/home";
+import { Search } from "@/pages/search";
 import { ShowVehicle } from "@/pages/vehicle";
 
 export const router = createBrowserRouter([
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
             { path: "/login", element: <Auth.Login /> },
             { path: "/register", element: <Auth.Register /> },
         ],
+    },
+    {
+        element: <SearchShell />,
+        children: [{ path: "/search", element: <Search /> }],
     },
     {
         element: <AdminShell />,
