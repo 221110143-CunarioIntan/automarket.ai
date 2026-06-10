@@ -1,1 +1,1 @@
-export { default as Show } from "./Show";
+export { default as ShowVehicle } from "./Show";
