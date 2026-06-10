@@ -1,9 +1,14 @@
 export { default as Avatar } from "./Avatar";
+export { default as Badge } from "./Badge";
 export { default as Button } from "./Button";
 export { default as Checkbox } from "./Checkbox";
 export { default as Dropdown } from "./Dropdown";
 export { default as EmptyState } from "./EmptyState";
+export { default as ErrorState } from "./ErrorState";
+export { default as ForbiddenState } from "./ForbiddenState";
 export { default as Input } from "./Input";
+export { default as InputNumber } from "./InputNumber";
 export { default as InputPassword } from "./InputPassword";
 export { default as LogoText } from "./LogoText";
+export { default as NotFoundState } from "./NotFoundState";
 export { default as Select } from "./Select";

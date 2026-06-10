@@ -1,6 +1,13 @@
 import { cn } from "@/lib/cn";
 
-const EmptyState = ({ icon, title, description, action, className }) => (
+const EmptyState = ({
+    icon,
+    iconClassName,
+    title,
+    description,
+    action,
+    className,
+}) => (
     <div
         className={cn(
             "flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-white px-6 py-16 text-center",
@@ -8,7 +15,12 @@ const EmptyState = ({ icon, title, description, action, className }) => (
         )}
     >
         {icon && (
-            <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+            <div
+                className={cn(
+                    "mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400",
+                    iconClassName,
+                )}
+            >
                 {icon}
             </div>
         )}
