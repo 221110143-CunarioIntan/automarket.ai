@@ -168,16 +168,22 @@ const DescriptionCard = ({ vehicle }) => (
     <div className="rounded-2xl border border-slate-200 bg-white p-6">
         <h2 className="mb-3 font-bold text-slate-900">Description</h2>
         <p className="text-sm whitespace-pre-line text-slate-600">
-            {formatBrand(vehicle.brand)} {vehicle.model} {vehicle.year}.
-            {vehicle.body_type ? ` ${vehicle.body_type}.` : ""}
-            {vehicle.transmission
-                ? ` ${vehicle.transmission} transmission.`
-                : ""}
-            {vehicle.fuel ? ` ${fuelLabel(vehicle.fuel)} fuel.` : ""}
-            {vehicle.color ? ` Color: ${vehicle.color}.` : ""}
-            {vehicle.mileage
-                ? ` ${vehicle.mileage.toLocaleString("id-ID")} km mileage.`
-                : ""}
+            {vehicle.description?.trim() ? (
+                vehicle.description
+            ) : (
+                <>
+                    {formatBrand(vehicle.brand)} {vehicle.model} {vehicle.year}.
+                    {vehicle.body_type ? ` ${vehicle.body_type}.` : ""}
+                    {vehicle.transmission
+                        ? ` ${vehicle.transmission} transmission.`
+                        : ""}
+                    {vehicle.fuel ? ` ${fuelLabel(vehicle.fuel)} fuel.` : ""}
+                    {vehicle.color ? ` Color: ${vehicle.color}.` : ""}
+                    {vehicle.mileage
+                        ? ` ${vehicle.mileage.toLocaleString("id-ID")} km mileage.`
+                        : ""}
+                </>
+            )}
         </p>
     </div>
 );

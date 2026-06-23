@@ -12,3 +12,4 @@ export { default as InputPassword } from "./InputPassword";
 export { default as LogoText } from "./LogoText";
 export { default as NotFoundState } from "./NotFoundState";
 export { default as Select } from "./Select";
+export { default as Textarea } from "./Textarea";

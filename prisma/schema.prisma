@@ -137,6 +137,7 @@ model Vehicle {
     mileage      Int
     location     String?
     engineCc     Int?        @map("engine_cc")
+    description  String?
     images       String[]    @default([])
     status       AdStatus    @default(PENDING)
     approvedById String?     @map("approved_by_id") @db.Uuid

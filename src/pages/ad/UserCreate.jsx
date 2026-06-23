@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, InputNumber, Select } from "@/components/ui";
+import { Button, Input, InputNumber, Select, Textarea } from "@/components/ui";
 import { useAuth } from "@/contexts";
 import {
     BRAND_OPTIONS,
@@ -62,6 +62,7 @@ const UserCreate = () => {
             mileage: Number(form.mileage),
             location: form.location?.trim() || null,
             engine_cc: form.engine_cc ? Number(form.engine_cc) : null,
+            description: form.description?.trim() || null,
             status: "PENDING",
         });
 
@@ -284,6 +285,17 @@ const UserCreate = () => {
                             {...register("location")}
                         />
                     </div>
+                </FormSection>
+
+                <FormSection title="Deskripsi">
+                    <Textarea
+                        label="Deskripsi Iklan"
+                        id="description"
+                        rows={5}
+                        placeholder="Ceritakan kondisi kendaraan, kelengkapan dokumen, riwayat servis, alasan dijual, dll. Kosongkan untuk memakai deskripsi otomatis."
+                        error={errors.description?.message}
+                        {...register("description")}
+                    />
                 </FormSection>
 
                 <div className="rounded-xl border border-slate-200 bg-slate-50 p-5 text-sm text-slate-600">
