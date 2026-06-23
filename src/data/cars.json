@@ -667,7 +667,7 @@
     {
         "id": "car-36",
         "brand": "Wuling",
-        "model": "ALMAZ1.5S",
+        "model": "ALMAZ 1.5S",
         "body_type": "MINIBUS",
         "color": "PUTIH",
         "year": 2021,
@@ -686,7 +686,7 @@
     {
         "id": "car-37",
         "brand": "Nissan",
-        "model": "NEW TERRAE2.5",
+        "model": "NEW TERRA E 2.5",
         "body_type": "JEEP L.C.HDTP",
         "color": "PUTIH",
         "year": 2019,
@@ -724,7 +724,7 @@
     {
         "id": "car-39",
         "brand": "Nissan",
-        "model": "SERENA2.0HWSTAR",
+        "model": "SERENA 2.0 HWSTAR",
         "body_type": "MINIBUS",
         "color": "SILVER METALIK",
         "year": 2013,
@@ -914,7 +914,7 @@
     {
         "id": "car-49",
         "brand": "Suzuki",
-        "model": "ARK415F GT",
+        "model": "ERTIGA ARK415F GT",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2019,
@@ -933,7 +933,7 @@
     {
         "id": "car-50",
         "brand": "Suzuki",
-        "model": "ARK415F GX",
+        "model": "ERTIGA ARK415F GX",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2019,
@@ -952,7 +952,7 @@
     {
         "id": "car-51",
         "brand": "Suzuki",
-        "model": "AVI414F",
+        "model": "ERTIGA AVI414F",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2013,
@@ -990,7 +990,7 @@
     {
         "id": "car-53",
         "brand": "Suzuki",
-        "model": "GC415V APV",
+        "model": "APV GC415V",
         "body_type": "MINIBUS",
         "color": "HITAM METALIK",
         "year": 2010,
@@ -1104,7 +1104,7 @@
     {
         "id": "car-59",
         "brand": "Mitsubishi",
-        "model": "XPANDER15LSPORT",
+        "model": "XPANDER 15LSPORT",
         "body_type": "MINIBUS",
         "color": "PUTIH",
         "year": 2018,
@@ -1123,7 +1123,7 @@
     {
         "id": "car-60",
         "brand": "Mitsubishi",
-        "model": "XPANDER15LGLS",
+        "model": "XPANDER 15LGLS",
         "body_type": "MINIBUS",
         "color": "SILVER METALIK",
         "year": 2019,
@@ -1142,7 +1142,7 @@
     {
         "id": "car-61",
         "brand": "Mitsubishi",
-        "model": "XPANDER15LULT",
+        "model": "XPANDER 15LULT",
         "body_type": "MINIBUS",
         "color": "HITAM",
         "year": 2019,
@@ -1237,7 +1237,7 @@
     {
         "id": "car-66",
         "brand": "Mitsubishi",
-        "model": "XPANDER15LSPORT",
+        "model": "XPANDER 15LSPORT",
         "body_type": "MICRO/MINIBUS",
         "color": "HITAM",
         "year": 2019,
@@ -1446,7 +1446,7 @@
     {
         "id": "car-77",
         "brand": "Daihatsu",
-        "model": "TER15RF",
+        "model": "TERIOS 15RF",
         "body_type": "MINIBUS",
         "color": "PUTIH",
         "year": 2016,
@@ -1522,7 +1522,7 @@
     {
         "id": "car-81",
         "brand": "Daihatsu",
-        "model": "AYLA1.0M",
+        "model": "AYLA 1.0M",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2018,
@@ -1560,7 +1560,7 @@
     {
         "id": "car-83",
         "brand": "Daihatsu",
-        "model": "B401RS",
+        "model": "SIGRA B401RS",
         "body_type": "MINIBUS",
         "color": "HITAM",
         "year": 2019,
@@ -1579,7 +1579,7 @@
     {
         "id": "car-84",
         "brand": "Daihatsu",
-        "model": "XEN13XMT",
+        "model": "XENIA 13XMT",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2018,
@@ -1617,7 +1617,7 @@
     {
         "id": "car-86",
         "brand": "Daihatsu",
-        "model": "F651RV",
+        "model": "XENIA F651RV",
         "body_type": "MINIBUS",
         "color": "HITAM METALIK",
         "year": 2013,
@@ -1636,7 +1636,7 @@
     {
         "id": "car-87",
         "brand": "Daihatsu",
-        "model": "XEN13RMT",
+        "model": "XENIA 13RMT",
         "body_type": "MINIBUS",
         "color": "SILVER METALIK",
         "year": 2018,
@@ -1655,7 +1655,7 @@
     {
         "id": "car-88",
         "brand": "Daihatsu",
-        "model": "B100RS",
+        "model": "AYLA B100RS",
         "body_type": "MINIBUS",
         "color": "HITAM",
         "year": 2014,
@@ -1674,7 +1674,7 @@
     {
         "id": "car-89",
         "brand": "Daihatsu",
-        "model": "TERI15",
+        "model": "TERIOS 15",
         "body_type": "MINIBUS",
         "color": "HITAM METALIK",
         "year": 2019,
@@ -1693,7 +1693,7 @@
     {
         "id": "car-90",
         "brand": "Daihatsu",
-        "model": "AYLA12X",
+        "model": "AYLA 12X",
         "body_type": "MINIBUS",
         "color": "SILVER METALIK",
         "year": 2022,
@@ -1712,7 +1712,7 @@
     {
         "id": "car-91",
         "brand": "Daihatsu",
-        "model": "TER15RF700R",
+        "model": "TERIOS 15RF700R",
         "body_type": "MINIBUS",
         "color": "SILVER METALIK",
         "year": 2017,
@@ -1731,7 +1731,7 @@
     {
         "id": "car-92",
         "brand": "Daihatsu",
-        "model": "XEN15RMT",
+        "model": "XENIA 15RMT",
         "body_type": "MINIBUS",
         "color": "SILVER METALIK",
         "year": 2020,
@@ -1750,7 +1750,7 @@
     {
         "id": "car-93",
         "brand": "Daihatsu",
-        "model": "B401RS",
+        "model": "SIGRA B401RS",
         "body_type": "MINIBUS",
         "color": "HITAM",
         "year": 2017,
@@ -1769,7 +1769,7 @@
     {
         "id": "car-94",
         "brand": "Daihatsu",
-        "model": "AYLA12R",
+        "model": "AYLA 12R",
         "body_type": "MINIBUS",
         "color": "HITAM",
         "year": 2018,
@@ -1978,7 +1978,7 @@
     {
         "id": "car-105",
         "brand": "Honda",
-        "model": "BRIOSATYADD1 12E",
+        "model": "BRIO SATYA DD1 12E",
         "body_type": "MINIBUS",
         "color": "MERAH",
         "year": 2015,
@@ -1997,7 +1997,7 @@
     {
         "id": "car-106",
         "brand": "Honda",
-        "model": "HONDAHRVRU518",
+        "model": "HONDA HRV RU518",
         "body_type": "MINIBUS",
         "color": "PUTIH",
         "year": 2017,
@@ -2073,7 +2073,7 @@
     {
         "id": "car-110",
         "brand": "Honda",
-        "model": "H MOBDD4 1.5",
+        "model": "MOBILIO DD4 1.5",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2014,
@@ -2092,7 +2092,7 @@
     {
         "id": "car-111",
         "brand": "Honda",
-        "model": "H MOBDD4 1.5",
+        "model": "MOBILIO DD4 1.5",
         "body_type": "MINIBUS",
         "color": "HITAM MUTIARA",
         "year": 2016,
@@ -2111,7 +2111,7 @@
     {
         "id": "car-112",
         "brand": "Honda",
-        "model": "HONDA BRV",
+        "model": "BRV",
         "body_type": "MINIBUS",
         "color": "PUTIH",
         "year": 2017,
@@ -2130,7 +2130,7 @@
     {
         "id": "car-113",
         "brand": "Honda",
-        "model": "HONDAHRVRU518",
+        "model": "HRV RU518",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2017,
@@ -2149,7 +2149,7 @@
     {
         "id": "car-114",
         "brand": "Honda",
-        "model": "HONDAHRVRU115",
+        "model": "HRV RU115",
         "body_type": "MINIBUS",
         "color": "HITAM MUTIARA",
         "year": 2015,
@@ -2225,7 +2225,7 @@
     {
         "id": "car-118",
         "brand": "Honda",
-        "model": "H MOBDD4 1.5",
+        "model": "MOBILIO DD4 1.5",
         "body_type": "MINIBUS",
         "color": "HITAM METALIK",
         "year": 2014,
@@ -2244,7 +2244,7 @@
     {
         "id": "car-119",
         "brand": "Honda",
-        "model": "ONDA BR-V1.5",
+        "model": "BR-V 1.5",
         "body_type": "MINIBUS",
         "color": "PUTIH",
         "year": 2017,
@@ -2282,7 +2282,7 @@
     {
         "id": "car-121",
         "brand": "Honda",
-        "model": "H MOBDD4 1.5",
+        "model": "MOBILIO DD4 1.5",
         "body_type": "MINIBUS",
         "color": "MERAH METALIK",
         "year": 2014,
@@ -2377,7 +2377,7 @@
     {
         "id": "car-126",
         "brand": "Honda",
-        "model": "HONDAHRVRU115",
+        "model": "HRV RU115",
         "body_type": "MINIBUS",
         "color": "ABU ABU METALIK",
         "year": 2016,
@@ -3650,7 +3650,7 @@
     {
         "id": "car-193",
         "brand": "Toyota",
-        "model": "VOXY20",
+        "model": "VOXY 20",
         "body_type": "MPV",
         "color": "HITAM",
         "year": 2019,
@@ -3802,7 +3802,7 @@
     {
         "id": "car-201",
         "brand": "Mitsubishi",
-        "model": "PAJ SPO25 HPE4X2",
+        "model": "PAJERO SPORT 25 HPE4X2",
         "body_type": "JEEP L.C.HDTP",
         "color": "HITAM",
         "year": 2015,
@@ -3821,7 +3821,7 @@
     {
         "id": "car-202",
         "brand": "Mitsubishi",
-        "model": "PAJ SPO24L",
+        "model": "PAJERO SPORT 24L",
         "body_type": "JEEP L.C.HDTP",
         "color": "HITAM",
         "year": 2019,
@@ -3840,7 +3840,7 @@
     {
         "id": "car-203",
         "brand": "Mitsubishi",
-        "model": "PAJSPO24LDAKARK2W8",
+        "model": "PAJERO SPORT 24L DAKAR K2W8",
         "body_type": "JEEP S.C.HDTP",
         "color": "HITAM",
         "year": 2019,
@@ -3878,7 +3878,7 @@
     {
         "id": "car-205",
         "brand": "Toyota",
-        "model": "VOXY20",
+        "model": "VOXY 20",
         "body_type": "MINIBUS",
         "color": "HITAM COKLAT",
         "year": 2018,
