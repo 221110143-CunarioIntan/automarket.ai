@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { Button, Input, InputNumber, Select, Textarea } from "@/components/ui";
+import {
+    Alert,
+    Button,
+    Input,
+    InputNumber,
+    Select,
+    Textarea,
+} from "@/components/ui";
 import { useAuth } from "@/contexts";
 import {
     BRAND_OPTIONS,
@@ -344,11 +351,7 @@ const UserCreate = () => {
                     </ul>
                 </div>
 
-                {submitError && (
-                    <p className="rounded-lg bg-red-50 px-4 py-2 text-sm text-red-600">
-                        {submitError}
-                    </p>
-                )}
+                {submitError && <Alert tone="danger">{submitError}</Alert>}
 
                 <div className="flex justify-end gap-3">
                     <Button
