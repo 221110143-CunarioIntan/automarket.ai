@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
     LuFacebook,
     LuInstagram,
@@ -36,9 +37,12 @@ const Footer = () => {
                             </a>
                         </li>
                         <li>
-                            <a href="#" className="hover:text-slate-900">
+                            <Link
+                                to="/compare"
+                                className="hover:text-slate-900"
+                            >
                                 Compare cars
-                            </a>
+                            </Link>
                         </li>
                     </ul>
                 </div>

@@ -35,8 +35,8 @@ const Navbar = () => {
                         Buy motor
                         <LuChevronDown className="h-3.5 w-3.5" />
                     </button>
-                    <Link to="/trade-in" className="hover:text-slate-900">
-                        Trade-in
+                    <Link to="/compare" className="hover:text-slate-900">
+                        Compare
                     </Link>
                     <Link to="/contact" className="hover:text-slate-900">
                         Contact-Us
