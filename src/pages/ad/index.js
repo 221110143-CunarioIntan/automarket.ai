@@ -1,3 +1,4 @@
+export { default as AdminEdit } from "./AdminEdit";
 export { default as AdminList } from "./AdminList";
 export { default as AdminShow } from "./AdminShow";
 export { default as UserCreate } from "./UserCreate";

@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { AdminShell, AuthShell, MainShell, SearchShell } from "@/layouts";
 import {
+    AdminEdit,
     AdminList,
     AdminShow,
     UserCreate,
@@ -45,6 +46,7 @@ export const router = createBrowserRouter([
             { path: "/admin/dashboard", element: <AdminDashboard /> },
             { path: "/admin/ads", element: <AdminList /> },
             { path: "/admin/ads/:id", element: <AdminShow /> },
+            { path: "/admin/ads/:id/edit", element: <AdminEdit /> },
         ],
     },
 ]);

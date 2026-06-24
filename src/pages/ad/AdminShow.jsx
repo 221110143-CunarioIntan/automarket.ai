@@ -7,6 +7,7 @@ import {
     LuCheck,
     LuClock,
     LuExternalLink,
+    LuPencil,
     LuUser,
     LuX,
 } from "react-icons/lu";
@@ -255,6 +256,13 @@ const StatusActionCard = ({ vehicle, acting, onApprove, onReject }) => {
                     onApprove={onApprove}
                     onReject={onReject}
                 />
+                <Link
+                    to={`/admin/ads/${vehicle.id}/edit`}
+                    className="flex w-full items-center justify-center gap-1.5 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                >
+                    <LuPencil className="h-4 w-4" />
+                    Edit Data Iklan
+                </Link>
             </div>
         </div>
     );
