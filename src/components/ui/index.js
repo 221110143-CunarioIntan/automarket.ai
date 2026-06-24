@@ -11,6 +11,7 @@ export { default as Input } from "./Input";
 export { default as InputNumber } from "./InputNumber";
 export { default as InputPassword } from "./InputPassword";
 export { default as LogoText } from "./LogoText";
+export { default as Modal } from "./Modal";
 export { default as NotFoundState } from "./NotFoundState";
 export { default as Select } from "./Select";
 export { default as Textarea } from "./Textarea";
