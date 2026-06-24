@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Input, InputPassword } from "@/components/ui";
+import { authErrorMessage } from "@/lib/authError";
 import { supabase } from "@/lib/supabase";
 
 const Login = () => {
@@ -22,7 +23,7 @@ const Login = () => {
         setSubmitting(false);
 
         if (authError) {
-            setError(authError.message);
+            setError(authErrorMessage(authError));
             return;
         }
 

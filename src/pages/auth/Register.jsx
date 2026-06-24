@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Checkbox, Input, InputPassword } from "@/components/ui";
+import { authErrorMessage } from "@/lib/authError";
 import { supabase } from "@/lib/supabase";
 
 const Register = () => {
@@ -17,11 +18,11 @@ const Register = () => {
         setError(null);
 
         if (password !== confirm) {
-            setError("Passwords do not match.");
+            setError("Konfirmasi password tidak cocok.");
             return;
         }
         if (!agreed) {
-            setError("You must agree to the Terms and Privacy Policy.");
+            setError("Anda harus menyetujui Terms dan Privacy Policy.");
             return;
         }
 
@@ -33,7 +34,7 @@ const Register = () => {
         setSubmitting(false);
 
         if (authError) {
-            setError(authError.message);
+            setError(authErrorMessage(authError));
             return;
         }
 
