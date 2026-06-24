@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import {
     LuArrowLeft,
+    LuArrowLeftRight,
     LuArrowRight,
     LuBike,
     LuCar,
@@ -283,6 +284,13 @@ const PurchaseCard = ({ vehicle }) => {
                 <Button variant="outline" className="w-full">
                     Seller Contact
                 </Button>
+                <Link
+                    to={`/compare?v1=${vehicle.id}`}
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+                >
+                    <LuArrowLeftRight className="h-4 w-4" />
+                    Bandingkan
+                </Link>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2 border-t border-slate-100 pt-4">
