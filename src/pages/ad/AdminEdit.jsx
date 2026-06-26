@@ -114,15 +114,12 @@ const EditForm = ({ vehicle }) => {
                 brand: form.brand,
                 model: form.model.trim(),
                 year: Number(form.year),
-                price_cash: Number(form.price_cash),
                 body_type: form.body_type,
                 color: form.color?.trim() || null,
                 transmission: form.transmission,
                 fuel: form.type === "MOTOR" ? null : form.fuel,
                 mileage: Number(form.mileage),
-                location: form.location?.trim() || null,
                 engine_cc: form.engine_cc ? Number(form.engine_cc) : null,
-                description: form.description?.trim() || null,
             })
             .eq("id", vehicle.id);
 
@@ -335,20 +332,11 @@ const EditForm = ({ vehicle }) => {
                         <Controller
                             control={control}
                             name="price_cash"
-                            rules={{
-                                required: "Harga wajib diisi",
-                                min: {
-                                    value: 1,
-                                    message: "Harga harus lebih dari 0",
-                                },
-                            }}
-                            render={({ field, fieldState }) => (
+                            render={({ field }) => (
                                 <InputNumber
                                     label="Harga (Rp)"
                                     id="price_cash"
-                                    required
-                                    placeholder="e.g. 150.000.000"
-                                    error={fieldState.error?.message}
+                                    disabled
                                     value={field.value ?? ""}
                                     onChange={field.onChange}
                                 />
@@ -357,8 +345,7 @@ const EditForm = ({ vehicle }) => {
                         <Input
                             label="Lokasi"
                             id="location"
-                            placeholder="e.g. Medan, Sumatera Utara"
-                            error={errors.location?.message}
+                            disabled
                             {...register("location")}
                         />
                     </div>
@@ -369,7 +356,7 @@ const EditForm = ({ vehicle }) => {
                         label="Deskripsi Iklan"
                         id="description"
                         rows={5}
-                        placeholder="Kosongkan untuk memakai deskripsi otomatis."
+                        disabled
                         error={errors.description?.message}
                         {...register("description")}
                     />

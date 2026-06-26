@@ -16,7 +16,7 @@ const Textarea = ({ label, id, required, error, className, rows = 4, ...props })
             rows={rows}
             aria-invalid={!!error}
             className={cn(
-                "w-full resize-y rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2",
+                "w-full resize-y rounded-lg border px-3 py-2 text-sm outline-none focus:ring-2 disabled:cursor-not-allowed disabled:resize-none disabled:bg-slate-100 disabled:text-slate-500",
                 error
                     ? "border-red-500 focus:border-red-500 focus:ring-red-100"
                     : "border-slate-300 focus:border-blue-500 focus:ring-blue-100",
