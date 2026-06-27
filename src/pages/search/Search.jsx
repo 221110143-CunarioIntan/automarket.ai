@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
     LuClipboardList,
@@ -10,10 +10,7 @@ import {
     LuSend,
 } from "react-icons/lu";
 import { Button } from "@/components/ui";
-import { useFetchData } from "@/hooks";
 import { CarCard, MotorCard } from "@/pages/home/components";
-import { BRAND_LABEL } from "@/lib/enums";
-import { supabase } from "@/lib/supabase";
 
 const HOW_TO_BUY = [
     {
@@ -34,56 +31,94 @@ const HOW_TO_BUY = [
     },
 ];
 
-const sanitize = (s) => s.replace(/[%,()]/g, "").trim();
-
-const matchBrandEnums = (needle) =>
-    Object.entries(BRAND_LABEL)
-        .filter(([, label]) => label.toLowerCase().includes(needle.toLowerCase()))
-        .map(([value]) => value);
-
-const fetchSearch = async (q) => {
-    let query = supabase
-        .from("vehicles")
-        .select("*")
-        .eq("status", "APPROVED")
-        .order("created_at", { ascending: false })
-        .limit(12);
-    const safe = sanitize(q);
-    if (safe) {
-        const filters = [
-            `model.ilike.%${safe}%`,
-            `body_type.ilike.%${safe}%`,
-        ];
-        const brands = matchBrandEnums(safe);
-        if (brands.length) filters.push(`brand.in.(${brands.join(",")})`);
-        query = query.or(filters.join(","));
-    }
-    const { data, error } = await query;
-    if (error) throw error;
-    return data;
-};
-
 const Search = () => {
     const [searchParams, setSearchParams] = useSearchParams();
-    const q = searchParams.get("q") ?? "";
-    const [input, setInput] = useState(q);
-    const { data, loading, error } = useFetchData(() => fetchSearch(q), [q]);
+    const initialQ = searchParams.get("q") ?? "";
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const trimmed = input.trim();
-        setSearchParams(trimmed ? { q: trimmed } : {});
+    const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
+    const [sending, setSending] = useState(false);
+    const bottomRef = useRef(null);
+    const sentInitialRef = useRef(false);
+
+    const send = async (text) => {
+        const trimmed = text.trim();
+        if (!trimmed || sending) return;
+
+        const nextMessages = [...messages, { role: "user", content: trimmed }];
+        setMessages(nextMessages);
+        setInput("");
+        setSending(true);
+
+        const lastWithVehicles = [...messages]
+            .reverse()
+            .find((m) => m.role === "assistant" && m.vehicles?.length);
+        const recentVehicles = lastWithVehicles?.vehicles ?? [];
+
+        try {
+            const res = await fetch("/api/search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    messages: nextMessages.map((m) => ({
+                        role: m.role,
+                        content: m.content,
+                    })),
+                    recentVehicles,
+                }),
+            });
+            const data = await res.json();
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content: data.message ?? "Maaf, ada yang salah.",
+                    vehicles: data.vehicles ?? [],
+                },
+            ]);
+        } catch (e) {
+            setMessages((prev) => [
+                ...prev,
+                {
+                    role: "assistant",
+                    content: "Maaf, lagi error nih. Coba lagi sebentar.",
+                    vehicles: [],
+                },
+            ]);
+        } finally {
+            setSending(false);
+        }
     };
+
+    useEffect(() => {
+        if (initialQ && !sentInitialRef.current) {
+            sentInitialRef.current = true;
+            send(initialQ);
+            setSearchParams({}, { replace: true });
+        }
+    }, [initialQ, setSearchParams]);
+
+    useEffect(() => {
+        bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, [messages, sending]);
 
     return (
         <>
             <div className="mx-auto flex max-w-7xl gap-6 px-6 pt-8 pb-32">
                 <HowToBuySidebar />
-                <div className="flex min-w-0 flex-1 flex-col gap-6">
-                    <ResultsGrid items={data} loading={loading} error={error} />
-                    <AIResponse query={q} />
+                <div className="flex min-w-0 flex-1 flex-col gap-4">
+                    {messages.length === 0 && !sending ? (
+                        <EmptyChat />
+                    ) : (
+                        messages.map((m, i) => (
+                            <MessageBubble key={i} message={m} />
+                        ))
+                    )}
+                    {sending && <TypingIndicator />}
+                    <div ref={bottomRef} />
                 </div>
             </div>
+
             <div className="pointer-events-none fixed inset-x-0 bottom-0 z-20 px-6">
                 <div className="mx-auto flex max-w-7xl gap-6">
                     <div className="hidden w-64 shrink-0 lg:block" />
@@ -91,7 +126,11 @@ const Search = () => {
                         <SearchInput
                             value={input}
                             onChange={setInput}
-                            onSubmit={handleSubmit}
+                            onSubmit={(e) => {
+                                e.preventDefault();
+                                send(input);
+                            }}
+                            disabled={sending}
                         />
                     </div>
                 </div>
@@ -120,60 +159,59 @@ const HowToBuySidebar = () => (
     </aside>
 );
 
-const ResultsGrid = ({ items, loading, error }) => {
-    if (loading) {
+const EmptyChat = () => (
+    <div className="flex flex-1 flex-col items-center justify-center py-20 text-center">
+        <p className="text-2xl font-bold text-slate-800">Hi! Aku AUTO&apos;Z</p>
+        <p className="mt-2 text-sm text-slate-500">
+            Tanya apa saja soal mobil atau motor bekas — aku bantu carikan.
+        </p>
+    </div>
+);
+
+const MessageBubble = ({ message }) => {
+    if (message.role === "user") {
         return (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {Array.from({ length: 6 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className="aspect-4/3 animate-pulse rounded-xl bg-slate-200"
-                    />
-                ))}
+            <div className="flex justify-end">
+                <div className="max-w-[80%] rounded-2xl bg-blue-600 px-4 py-3 text-sm text-white">
+                    {message.content}
+                </div>
             </div>
         );
     }
-    if (error) {
-        return (
-            <p className="text-sm text-red-600">
-                Failed to load: {error.message}
-            </p>
-        );
-    }
-    if (!items?.length) {
-        return (
-            <p className="text-sm text-slate-500">
-                Tidak ada iklan yang cocok dengan pencarian.
-            </p>
-        );
-    }
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {items.map((v) =>
-                v.type === "CAR" ? (
-                    <CarCard key={v.id} car={v} />
-                ) : (
-                    <MotorCard key={v.id} motor={v} />
-                ),
+        <div className="flex flex-col gap-3">
+            <div className="max-w-[85%] rounded-2xl bg-slate-50 px-5 py-4">
+                <p className="text-xs font-semibold tracking-wider text-blue-600 uppercase">
+                    AUTO&apos;Z
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-700">
+                    {message.content}
+                </p>
+            </div>
+            {message.vehicles?.length > 0 && (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {message.vehicles.map((v) =>
+                        v.type === "CAR" ? (
+                            <CarCard key={v.id} car={v} />
+                        ) : (
+                            <MotorCard key={v.id} motor={v} />
+                        ),
+                    )}
+                </div>
             )}
         </div>
     );
 };
 
-const AIResponse = ({ query }) => (
-    <div className="rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 text-sm text-slate-700">
-        <p className="text-xs font-semibold tracking-wider text-blue-600 uppercase">
-            AUTO&apos;Z
-        </p>
-        <p className="mt-2 leading-relaxed">
-            {query
-                ? `You searched for "${query}". AI-powered recommendation akan segera tersedia — untuk sementara kami tampilkan iklan yang cocok dari katalog kami.`
-                : `Coba tanya kendaraan seperti apa yang kamu cari. Aku akan bantu rekomendasikan iklan terbaik dari marketplace.`}
-        </p>
+const TypingIndicator = () => (
+    <div className="flex w-fit gap-1 rounded-2xl bg-slate-50 px-5 py-4">
+        <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400" />
+        <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:150ms]" />
+        <span className="h-2 w-2 animate-bounce rounded-full bg-slate-400 [animation-delay:300ms]" />
     </div>
 );
 
-const SearchInput = ({ value, onChange, onSubmit }) => (
+const SearchInput = ({ value, onChange, onSubmit, disabled }) => (
     <form
         onSubmit={onSubmit}
         className="flex items-center gap-1 rounded-full border border-slate-300 bg-white p-2 shadow-sm"
@@ -190,7 +228,8 @@ const SearchInput = ({ value, onChange, onSubmit }) => (
             placeholder="Ask AUTO'Z"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-slate-400"
+            disabled={disabled}
+            className="flex-1 bg-transparent px-2 text-sm outline-none placeholder:text-slate-400 disabled:opacity-50"
         />
         <button
             type="button"
@@ -201,8 +240,9 @@ const SearchInput = ({ value, onChange, onSubmit }) => (
         </button>
         <Button
             type="submit"
+            disabled={disabled}
             className="flex h-10 w-10 items-center justify-center rounded-full p-0"
-            aria-label="Search"
+            aria-label="Send"
         >
             <LuSend className="h-4 w-4" />
         </Button>
