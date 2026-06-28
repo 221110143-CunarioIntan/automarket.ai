@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { LuSearch, LuSlidersHorizontal } from "react-icons/lu";
+import { LuMic, LuSearch } from "react-icons/lu";
 import { Button } from "@/components/ui";
 import { useFetchData } from "@/hooks";
 import { supabase } from "@/lib/supabase";
@@ -99,9 +99,9 @@ const HeroSection = () => {
                         <button
                             type="button"
                             className="text-slate-400 hover:text-slate-600"
-                            aria-label="Filter"
+                            aria-label="Voice search"
                         >
-                            <LuSlidersHorizontal className="h-5 w-5" />
+                            <LuMic className="h-5 w-5" />
                         </button>
                         <Button type="submit" className="px-6">
                             Search
