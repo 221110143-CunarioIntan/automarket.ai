@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LuMic, LuSearch } from "react-icons/lu";
 import { Button } from "@/components/ui";
 import { useFetchData } from "@/hooks";
@@ -21,18 +21,18 @@ const POPULAR_SEARCHES = [
 ];
 
 const POPULAR_BRANDS = [
-    { name: "Toyota", logo: "toyota.png" },
-    { name: "Honda", logo: "honda.png" },
-    { name: "BMW", logo: "bmw.png" },
-    { name: "Mercedes-Benz", logo: "mercedes_benz.png" },
-    { name: "Yamaha", logo: "yamaha.png" },
-    { name: "Mitsubishi", logo: "mitsubishi.png" },
-    { name: "Daihatsu", logo: "daihatsu.png" },
-    { name: "Suzuki", logo: "suzuki.png" },
-    { name: "Lexus", logo: "lexus.png" },
-    { name: "KIA", logo: "kia.png" },
-    { name: "BYD", logo: "byd.png" },
-    { name: "Wuling", logo: "wuling.png" },
+    { name: "Toyota", logo: "toyota.png", enum: "TOYOTA", type: "CAR" },
+    { name: "Honda", logo: "honda.png", enum: "HONDA", type: "CAR" },
+    { name: "BMW", logo: "bmw.png", enum: "BMW", type: "CAR" },
+    { name: "Mercedes-Benz", logo: "mercedes_benz.png", enum: "MERCEDES_BENZ", type: "CAR" },
+    { name: "Yamaha", logo: "yamaha.png", enum: "YAMAHA", type: "MOTOR" },
+    { name: "Mitsubishi", logo: "mitsubishi.png", enum: "MITSUBISHI", type: "CAR" },
+    { name: "Daihatsu", logo: "daihatsu.png", enum: "DAIHATSU", type: "CAR" },
+    { name: "Suzuki", logo: "suzuki.png", enum: "SUZUKI", type: "CAR" },
+    { name: "Lexus", logo: "lexus.png", enum: "LEXUS", type: "CAR" },
+    { name: "KIA", logo: "kia.png", enum: "KIA", type: "CAR" },
+    { name: "BYD", logo: "byd.png", enum: "BYD", type: "CAR" },
+    { name: "Wuling", logo: "wuling.png", enum: "WULING", type: "CAR" },
 ];
 
 const fetchApprovedVehiclesByType = async (type) => {
@@ -65,7 +65,7 @@ const HeroSection = () => {
 
     return (
         <section className="relative">
-            <div className="relative h-120 w-full overflow-hidden">
+            <div className="relative h-72 w-full overflow-hidden sm:h-96 md:h-120">
                 <img
                     src="/images/home-hero.webp"
                     alt=""
@@ -73,42 +73,47 @@ const HeroSection = () => {
                 />
                 <div className="absolute inset-0 bg-black/30" />
                 <div className="absolute inset-0 flex items-center justify-center px-6">
-                    <h1 className="max-w-2xl text-center text-4xl font-extrabold tracking-wider text-white drop-shadow-lg md:text-5xl">
+                    <h1 className="max-w-2xl text-center text-2xl font-extrabold tracking-wider text-white drop-shadow-lg sm:text-3xl md:text-5xl">
                         EXPLORE THE NEW EXPERIENCE OF AUTOMOTIVE ONLINE SHOP
                     </h1>
                 </div>
             </div>
 
-            <div className="relative z-10 mx-auto -mt-12 max-w-4xl px-6">
+            <div className="relative z-10 mx-auto -mt-8 max-w-4xl px-4 sm:-mt-12 sm:px-6">
                 <form
                     onSubmit={(e) => {
                         e.preventDefault();
                         submit(input);
                     }}
-                    className="rounded-2xl bg-white p-4 shadow-lg ring-1 ring-slate-200"
+                    className="rounded-2xl bg-white p-3 shadow-lg ring-1 ring-slate-200 sm:p-4"
                 >
-                    <div className="flex items-center gap-3">
-                        <LuSearch className="h-5 w-5 text-slate-400" />
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        <LuSearch className="hidden h-5 w-5 shrink-0 text-slate-400 sm:block" />
                         <input
                             type="text"
-                            placeholder="Find your vehicle using AI"
+                            placeholder="Cari kendaraan pakai AI"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            className="flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
+                            className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-slate-400"
                         />
                         <button
                             type="button"
-                            className="text-slate-400 hover:text-slate-600"
+                            className="shrink-0 text-slate-400 hover:text-slate-600"
                             aria-label="Voice search"
                         >
                             <LuMic className="h-5 w-5" />
                         </button>
-                        <Button type="submit" className="px-6">
-                            Search
+                        <Button
+                            type="submit"
+                            className="shrink-0 px-3 sm:px-6"
+                            aria-label="Search"
+                        >
+                            <LuSearch className="h-4 w-4 sm:hidden" />
+                            <span className="hidden sm:inline">Search</span>
                         </Button>
                     </div>
 
-                    <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-slate-100 pt-3 text-sm">
+                    <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1.5 border-t border-slate-100 pt-3 text-xs sm:gap-x-4 sm:gap-y-2 sm:text-sm">
                         <span aria-hidden="true">🔥</span>
                         {POPULAR_SEARCHES.map((term) => (
                             <button
@@ -137,16 +142,18 @@ const PopularBrandSection = () => (
         <div className="group overflow-hidden">
             <div className="animate-marquee flex w-max gap-3 group-hover:[animation-play-state:paused]">
                 {[...POPULAR_BRANDS, ...POPULAR_BRANDS].map((brand, i) => (
-                    <div
+                    <Link
                         key={`${brand.name}-${i}`}
-                        className="flex h-20 w-35 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white px-4"
+                        to={`/vehicles?type=${brand.type}&brand=${brand.enum}`}
+                        className="flex h-20 w-35 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 transition hover:border-blue-400 hover:shadow-md"
+                        aria-label={`Cari ${brand.name}`}
                     >
                         <img
                             src={`/images/brand-logo/${brand.logo}`}
                             alt={brand.name}
                             className="max-h-12 max-w-full object-contain mix-blend-multiply"
                         />
-                    </div>
+                    </Link>
                 ))}
             </div>
         </div>
