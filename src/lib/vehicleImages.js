@@ -3,6 +3,17 @@ import { supabase } from "./supabase";
 
 const BUCKET = "vehicle-images";
 
+export const getSortedImages = (vehicle) => {
+    const images = vehicle?.vehicle_images;
+    if (!images?.length) return [];
+    return [...images].sort((a, b) => a.order - b.order);
+};
+
+export const getFirstImageUrl = (vehicle) => {
+    const images = getSortedImages(vehicle);
+    return images[0]?.webp_url ?? null;
+};
+
 const getExt = (filename, mime) => {
     const fromName = filename?.split(".").pop()?.toLowerCase();
     if (fromName && /^(jpe?g|png|webp)$/.test(fromName)) return fromName;

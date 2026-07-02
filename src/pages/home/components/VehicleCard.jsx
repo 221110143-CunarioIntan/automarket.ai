@@ -2,10 +2,19 @@ import { LuHeart } from "react-icons/lu";
 import { formatCurrency } from "@/lib/format";
 import Pill from "./Pill";
 
-const VehicleCard = ({ title, year, price, icon, pills }) => (
+const VehicleCard = ({ title, year, price, icon, imageUrl, pills }) => (
     <div className="cursor-pointer overflow-hidden rounded-xl border border-slate-200 bg-white transition hover:shadow-md">
-        <div className="relative flex aspect-4/3 items-center justify-center bg-slate-200">
-            {icon}
+        <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden bg-slate-200">
+            {imageUrl ? (
+                <img
+                    src={imageUrl}
+                    alt={title}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                />
+            ) : (
+                icon
+            )}
             <button
                 type="button"
                 className="absolute top-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-slate-400 hover:text-red-500"

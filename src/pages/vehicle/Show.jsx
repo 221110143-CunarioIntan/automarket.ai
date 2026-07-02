@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
     LuArrowLeft,
@@ -19,12 +20,13 @@ import {
 } from "@/lib/format";
 import { sampleRandom } from "@/lib/random";
 import { supabase } from "@/lib/supabase";
+import { getSortedImages } from "@/lib/vehicleImages";
 import { CarCard, MotorCard } from "@/pages/home/components";
 
 const fetchVehicleById = async (id) => {
     const { data, error } = await supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(*)")
         .eq("id", id)
         .single();
     if (error) throw error;
@@ -34,7 +36,7 @@ const fetchVehicleById = async (id) => {
 const fetchSimilarVehicles = async (type, excludeId, limit = 4) => {
     const { data, error } = await supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(webp_url, order)")
         .eq("status", "APPROVED")
         .eq("type", type)
         .neq("id", excludeId);
@@ -154,35 +156,77 @@ const SimilarVehiclesSection = ({ type, excludeId }) => {
 
 const ImageGallery = ({ vehicle }) => {
     const Icon = vehicle.type === "CAR" ? LuCar : LuBike;
+    const images = getSortedImages(vehicle);
+    const [current, setCurrent] = useState(0);
+
+    if (!images.length) {
+        return (
+            <div className="flex aspect-video items-center justify-center overflow-hidden rounded-2xl bg-slate-200">
+                <Icon className="h-32 w-32 text-slate-400" />
+            </div>
+        );
+    }
+
+    const prev = () =>
+        setCurrent((c) => (c - 1 + images.length) % images.length);
+    const next = () => setCurrent((c) => (c + 1) % images.length);
+
     return (
         <div className="space-y-3">
             <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl bg-slate-200">
-                <Icon className="h-32 w-32 text-slate-400" />
-                <button
-                    type="button"
-                    className="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-blue-600 text-white shadow-md"
-                    aria-label="Previous"
-                >
-                    <LuArrowLeft className="h-4 w-4" />
-                </button>
-                <button
-                    type="button"
-                    className="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-blue-600 text-white shadow-md"
-                    aria-label="Next"
-                >
-                    <LuArrowRight className="h-4 w-4" />
-                </button>
+                <img
+                    src={images[current].original_url}
+                    alt={`${formatBrand(vehicle.brand)} ${vehicle.model} — ${current + 1}`}
+                    className="h-full w-full object-cover"
+                />
+                {images.length > 1 && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={prev}
+                            className="absolute top-1/2 left-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
+                            aria-label="Previous"
+                        >
+                            <LuArrowLeft className="h-4 w-4" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={next}
+                            className="absolute top-1/2 right-3 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-blue-600 text-white shadow-md hover:bg-blue-700"
+                            aria-label="Next"
+                        >
+                            <LuArrowRight className="h-4 w-4" />
+                        </button>
+                        <span className="absolute right-3 bottom-3 rounded-full bg-black/60 px-2.5 py-1 text-xs font-medium text-white">
+                            {current + 1} / {images.length}
+                        </span>
+                    </>
+                )}
             </div>
-            <div className="flex gap-3 overflow-x-auto">
-                {Array.from({ length: 4 }).map((_, i) => (
-                    <div
-                        key={i}
-                        className="flex aspect-video w-32 shrink-0 items-center justify-center rounded-lg bg-slate-200"
-                    >
-                        <Icon className="h-8 w-8 text-slate-400" />
-                    </div>
-                ))}
-            </div>
+            {images.length > 1 && (
+                <div className="flex gap-3 overflow-x-auto">
+                    {images.map((img, i) => (
+                        <button
+                            key={img.id}
+                            type="button"
+                            onClick={() => setCurrent(i)}
+                            className={`aspect-video w-32 shrink-0 overflow-hidden rounded-lg transition ${
+                                i === current
+                                    ? "ring-2 ring-blue-600"
+                                    : "opacity-70 hover:opacity-100"
+                            }`}
+                            aria-label={`Show image ${i + 1}`}
+                        >
+                            <img
+                                src={img.webp_url}
+                                alt={`Thumbnail ${i + 1}`}
+                                loading="lazy"
+                                className="h-full w-full object-cover"
+                            />
+                        </button>
+                    ))}
+                </div>
+            )}
         </div>
     );
 };

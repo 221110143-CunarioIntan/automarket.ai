@@ -27,7 +27,7 @@ const extractFilters = (searchParams) => ({
 const fetchVehicles = async (filters, offset, limit) => {
     let query = supabase
         .from("vehicles")
-        .select("*", { count: "exact" })
+        .select("*, vehicle_images(webp_url, order)", { count: "exact" })
         .eq("status", "APPROVED")
         .eq("type", filters.type)
         .range(offset, offset + limit - 1);

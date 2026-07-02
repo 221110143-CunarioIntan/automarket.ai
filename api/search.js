@@ -227,7 +227,7 @@ export default async function handler(req, res) {
         if (intent === "search" && hasAnyFilter) {
             let query = supabase
                 .from("vehicles")
-                .select("*")
+                .select("*, vehicle_images(webp_url, order)")
                 .eq("status", "APPROVED")
                 .limit(6);
 

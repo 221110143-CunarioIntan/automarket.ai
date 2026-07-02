@@ -38,7 +38,7 @@ const POPULAR_BRANDS = [
 const fetchApprovedVehiclesByType = async (type) => {
     const { data, error } = await supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(webp_url, order)")
         .eq("status", "APPROVED")
         .eq("type", type);
     if (error) throw error;
