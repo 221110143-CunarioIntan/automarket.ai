@@ -7,6 +7,7 @@ export { default as Dropdown } from "./Dropdown";
 export { default as EmptyState } from "./EmptyState";
 export { default as ErrorState } from "./ErrorState";
 export { default as ForbiddenState } from "./ForbiddenState";
+export { default as ImageUploader } from "./ImageUploader";
 export { default as Input } from "./Input";
 export { default as InputNumber } from "./InputNumber";
 export { default as InputPassword } from "./InputPassword";

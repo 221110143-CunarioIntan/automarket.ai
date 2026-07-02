@@ -122,31 +122,48 @@ model User {
 }
 
 model Vehicle {
-    id           String      @id @default(uuid()) @db.Uuid
-    userId       String      @map("user_id") @db.Uuid
-    user         User        @relation("UserVehicles", fields: [userId], references: [id], onDelete: Cascade)
+    id           String         @id @default(uuid()) @db.Uuid
+    userId       String         @map("user_id") @db.Uuid
+    user         User           @relation("UserVehicles", fields: [userId], references: [id], onDelete: Cascade)
     type         VehicleType
     brand        Brand
     model        String
     year         Int
-    priceCash    BigInt      @map("price_cash")
-    bodyType     String      @map("body_type")
+    priceCash    BigInt         @map("price_cash")
+    bodyType     String         @map("body_type")
     color        String?
     transmission String
     fuel         String?
     mileage      Int
     location     String?
-    engineCc     Int?        @map("engine_cc")
+    engineCc     Int?           @map("engine_cc")
     description  String?
-    images       String[]    @default([])
-    status       AdStatus    @default(PENDING)
-    approvedById String?     @map("approved_by_id") @db.Uuid
-    approvedBy   User?       @relation("AdminApprovals", fields: [approvedById], references: [id])
-    approvedAt   DateTime?   @map("approved_at")
-    createdAt    DateTime    @default(now()) @map("created_at")
-    updatedAt    DateTime    @updatedAt @map("updated_at")
+    images       VehicleImage[]
+    status       AdStatus       @default(PENDING)
+    approvedById String?        @map("approved_by_id") @db.Uuid
+    approvedBy   User?          @relation("AdminApprovals", fields: [approvedById], references: [id])
+    approvedAt   DateTime?      @map("approved_at")
+    createdAt    DateTime       @default(now()) @map("created_at")
+    updatedAt    DateTime       @updatedAt @map("updated_at")
 
     @@index([status, type])
     @@index([brand])
     @@map("vehicles")
+}
+
+model VehicleImage {
+    id                String   @id @default(uuid()) @db.Uuid
+    vehicleId         String   @map("vehicle_id") @db.Uuid
+    vehicle           Vehicle  @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+    order             Int
+    originalUrl       String   @map("original_url")
+    webpUrl           String   @map("webp_url")
+    originalSizeBytes Int?     @map("original_size_bytes")
+    webpSizeBytes     Int?     @map("webp_size_bytes")
+    mimeType          String?  @map("mime_type")
+    createdAt         DateTime @default(now()) @map("created_at")
+
+    @@unique([vehicleId, order])
+    @@index([vehicleId])
+    @@map("vehicle_images")
 }

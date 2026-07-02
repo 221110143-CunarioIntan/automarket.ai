@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
     Alert,
     Button,
+    ImageUploader,
     Input,
     InputNumber,
     Select,
@@ -19,6 +20,7 @@ import {
     VEHICLE_TYPE_OPTIONS,
 } from "@/lib/enums";
 import { supabase } from "@/lib/supabase";
+import { uploadVehicleImages } from "@/lib/vehicleImages";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -26,6 +28,8 @@ const UserCreate = () => {
     const navigate = useNavigate();
     const { user, loading: authLoading } = useAuth();
     const [submitError, setSubmitError] = useState(null);
+    const [images, setImages] = useState([]);
+    const [uploading, setUploading] = useState(false);
 
     const {
         control,
@@ -55,27 +59,45 @@ const UserCreate = () => {
 
     const onSubmit = async (form) => {
         setSubmitError(null);
-        const { error } = await supabase.from("vehicles").insert({
-            user_id: user.id,
-            type: form.type,
-            brand: form.brand,
-            model: form.model.trim(),
-            year: Number(form.year),
-            price_cash: Number(form.price_cash),
-            body_type: form.body_type,
-            color: form.color?.trim() || null,
-            transmission: form.transmission,
-            fuel: form.type === "MOTOR" ? null : form.fuel,
-            mileage: Number(form.mileage),
-            location: form.location?.trim() || null,
-            engine_cc: form.engine_cc ? Number(form.engine_cc) : null,
-            description: form.description?.trim() || null,
-            status: "PENDING",
-        });
+        const { data: created, error } = await supabase
+            .from("vehicles")
+            .insert({
+                user_id: user.id,
+                type: form.type,
+                brand: form.brand,
+                model: form.model.trim(),
+                year: Number(form.year),
+                price_cash: Number(form.price_cash),
+                body_type: form.body_type,
+                color: form.color?.trim() || null,
+                transmission: form.transmission,
+                fuel: form.type === "MOTOR" ? null : form.fuel,
+                mileage: Number(form.mileage),
+                location: form.location?.trim() || null,
+                engine_cc: form.engine_cc ? Number(form.engine_cc) : null,
+                description: form.description?.trim() || null,
+                status: "PENDING",
+            })
+            .select("id")
+            .single();
 
         if (error) {
             setSubmitError(error.message);
             return;
+        }
+
+        if (images.length > 0) {
+            setUploading(true);
+            try {
+                await uploadVehicleImages(created.id, images);
+            } catch (err) {
+                setSubmitError(
+                    `Iklan tersimpan tapi ada gambar yang gagal diupload: ${err.message}. Kamu bisa edit iklan untuk retry.`,
+                );
+                setUploading(false);
+                return;
+            }
+            setUploading(false);
         }
 
         navigate("/ads/mine");
@@ -93,6 +115,15 @@ const UserCreate = () => {
             </div>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                <FormSection title="Foto Kendaraan">
+                    <ImageUploader
+                        value={images}
+                        onChange={setImages}
+                        max={5}
+                        disabled={isSubmitting || uploading}
+                    />
+                </FormSection>
+
                 <FormSection title="Jenis Kendaraan">
                     <div className="grid grid-cols-2 gap-4">
                         <Controller
@@ -361,8 +392,15 @@ const UserCreate = () => {
                     >
                         Cancel
                     </Button>
-                    <Button type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? "Submitting..." : "Submit Iklan"}
+                    <Button
+                        type="submit"
+                        disabled={isSubmitting || uploading}
+                    >
+                        {uploading
+                            ? "Mengupload gambar..."
+                            : isSubmitting
+                              ? "Submitting..."
+                              : "Submit Iklan"}
                     </Button>
                 </div>
             </form>
