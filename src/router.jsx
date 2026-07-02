@@ -13,13 +13,14 @@ import * as Auth from "@/pages/auth";
 import { Compare } from "@/pages/compare";
 import { Home } from "@/pages/home";
 import { Search } from "@/pages/search";
-import { ShowVehicle } from "@/pages/vehicle";
+import { List as VehicleList, ShowVehicle } from "@/pages/vehicle";
 
 export const router = createBrowserRouter([
     {
         element: <MainShell />,
         children: [
             { path: "/", element: <Home /> },
+            { path: "/vehicles", element: <VehicleList /> },
             { path: "/vehicle/:id", element: <ShowVehicle /> },
             { path: "/compare", element: <Compare /> },
             { path: "/ads/create", element: <UserCreate /> },

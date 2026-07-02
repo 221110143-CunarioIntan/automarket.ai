@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import {
-    LuChevronDown,
     LuLayoutDashboard,
     LuLogOut,
     LuMapPin,
@@ -21,20 +20,18 @@ const Navbar = () => {
                 </Link>
 
                 <nav className="flex items-center gap-6 text-sm font-medium text-slate-700">
-                    <button
-                        type="button"
-                        className="flex items-center gap-1 hover:text-slate-900"
+                    <Link
+                        to="/vehicles?type=CAR"
+                        className="hover:text-slate-900"
                     >
                         Buy car
-                        <LuChevronDown className="h-3.5 w-3.5" />
-                    </button>
-                    <button
-                        type="button"
-                        className="flex items-center gap-1 hover:text-slate-900"
+                    </Link>
+                    <Link
+                        to="/vehicles?type=MOTOR"
+                        className="hover:text-slate-900"
                     >
                         Buy motor
-                        <LuChevronDown className="h-3.5 w-3.5" />
-                    </button>
+                    </Link>
                     <Link to="/compare" className="hover:text-slate-900">
                         Compare
                     </Link>
