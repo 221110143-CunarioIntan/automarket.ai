@@ -13,6 +13,7 @@ import { useFetchData } from "@/hooks";
 import { AD_STATUS_COLOR, AD_STATUS_OPTIONS } from "@/lib/enums";
 import { formatBrand, formatCurrency } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
+import { getFirstImageUrl } from "@/lib/vehicleImages";
 
 const STATUS_FILTER_OPTIONS = [
     ...AD_STATUS_OPTIONS,
@@ -22,7 +23,7 @@ const STATUS_FILTER_OPTIONS = [
 const fetchAds = async (status) => {
     let query = supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(webp_url, order)")
         .order("created_at", { ascending: false });
     if (status !== "ALL") query = query.eq("status", status);
     const { data, error } = await query;
@@ -117,14 +118,24 @@ const AdminList = () => {
 
 const AdRow = ({ vehicle, acting, onApprove, onReject }) => {
     const Icon = vehicle.type === "CAR" ? LuCar : LuBike;
+    const thumbUrl = getFirstImageUrl(vehicle);
     return (
         <li className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm">
             <Link
                 to={`/admin/ads/${vehicle.id}`}
                 className="flex min-w-0 flex-1 items-center gap-4"
             >
-                <div className="flex h-20 w-28 shrink-0 items-center justify-center rounded-lg bg-slate-200">
-                    <Icon className="h-10 w-10 text-slate-400" />
+                <div className="flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-200">
+                    {thumbUrl ? (
+                        <img
+                            src={thumbUrl}
+                            alt={`${formatBrand(vehicle.brand)} ${vehicle.model}`}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <Icon className="h-10 w-10 text-slate-400" />
+                    )}
                 </div>
 
                 <div className="min-w-0 flex-1">
