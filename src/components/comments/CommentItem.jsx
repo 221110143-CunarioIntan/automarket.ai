@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LuCornerDownRight, LuTrash2 } from "react-icons/lu";
-import { Avatar } from "@/components/ui";
+import { Avatar, Button, Modal } from "@/components/ui";
 import { formatRelativeTime } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
 import CommentForm from "./CommentForm";
@@ -16,6 +16,9 @@ const CommentItem = ({
     onRefresh,
 }) => {
     const [replying, setReplying] = useState(false);
+    const [confirmingDelete, setConfirmingDelete] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState(null);
     const isDeleted = !!comment.deleted_at;
     const isAuthor = currentUser?.id === comment.user_id;
     const canDelete = !isDeleted && (isAuthor || isAdmin);
@@ -25,20 +28,18 @@ const CommentItem = ({
     const isOwner = ownerId && author?.id === ownerId;
 
     const handleDelete = async () => {
-        if (
-            !confirm(
-                "Hapus komentar ini? Balasan tetap terlihat dengan placeholder.",
-            )
-        )
-            return;
+        setDeleting(true);
+        setDeleteError(null);
         const { error } = await supabase
             .from("comments")
             .update({ deleted_at: new Date().toISOString() })
             .eq("id", comment.id);
+        setDeleting(false);
         if (error) {
-            alert(`Gagal hapus: ${error.message}`);
+            setDeleteError(error.message);
             return;
         }
+        setConfirmingDelete(false);
         onRefresh?.();
     };
 
@@ -94,7 +95,7 @@ const CommentItem = ({
                         {canDelete && (
                             <button
                                 type="button"
-                                onClick={handleDelete}
+                                onClick={() => setConfirmingDelete(true)}
                                 className="flex items-center gap-1 text-slate-500 hover:text-red-600"
                             >
                                 <LuTrash2 className="h-3.5 w-3.5" />
@@ -132,6 +133,41 @@ const CommentItem = ({
                     ))}
                 </div>
             )}
+
+            <Modal
+                open={confirmingDelete}
+                onClose={() => !deleting && setConfirmingDelete(false)}
+                title="Hapus komentar?"
+            >
+                <p className="text-sm text-slate-600">
+                    Komentar ini akan ditandai sebagai dihapus. Balasan yang
+                    ada tetap terlihat, tapi isi komentar diganti dengan
+                    placeholder.
+                </p>
+                {deleteError && (
+                    <p className="mt-3 text-sm text-red-600">
+                        Gagal hapus: {deleteError}
+                    </p>
+                )}
+                <div className="mt-5 flex justify-end gap-2">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setConfirmingDelete(false)}
+                        disabled={deleting}
+                    >
+                        Batal
+                    </Button>
+                    <Button
+                        type="button"
+                        onClick={handleDelete}
+                        disabled={deleting}
+                        className="bg-red-600 hover:bg-red-700"
+                    >
+                        {deleting ? "Menghapus..." : "Hapus"}
+                    </Button>
+                </div>
+            </Modal>
         </div>
     );
 };

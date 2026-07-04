@@ -58,6 +58,8 @@ const CommentForm = ({
     const remaining = MAX_CHARS - content.length;
     const overLimit = remaining < 0;
     const isReply = parentId != null;
+    const hasContent = content.length > 0;
+    const showFooter = hasContent || onCancel;
 
     return (
         <form onSubmit={handleSubmit}>
@@ -68,35 +70,43 @@ const CommentForm = ({
                 onChange={(e) => setContent(e.target.value)}
                 autoFocus={autoFocus}
             />
-            <div className="mt-2 flex items-center justify-between gap-3">
-                <span
-                    className={`text-xs ${overLimit ? "text-red-600" : "text-slate-500"}`}
+            {showFooter && (
+                <div
+                    className={`mt-2 flex items-center gap-3 ${hasContent ? "justify-between" : "justify-end"}`}
                 >
-                    {remaining} karakter tersisa
-                </span>
-                <div className="flex gap-2">
-                    {onCancel && (
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onCancel}
-                            disabled={submitting}
+                    {hasContent && (
+                        <span
+                            className={`text-xs ${overLimit ? "text-red-600" : "text-slate-500"}`}
                         >
-                            Batal
-                        </Button>
+                            {remaining} karakter tersisa
+                        </span>
                     )}
-                    <Button
-                        type="submit"
-                        disabled={submitting || !content.trim() || overLimit}
-                    >
-                        {submitting
-                            ? "Mengirim..."
-                            : isReply
-                              ? "Balas"
-                              : "Kirim"}
-                    </Button>
+                    <div className="flex gap-2">
+                        {onCancel && (
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={onCancel}
+                                disabled={submitting}
+                            >
+                                Batal
+                            </Button>
+                        )}
+                        {hasContent && (
+                            <Button
+                                type="submit"
+                                disabled={submitting || overLimit}
+                            >
+                                {submitting
+                                    ? "Mengirim..."
+                                    : isReply
+                                      ? "Balas"
+                                      : "Kirim"}
+                            </Button>
+                        )}
+                    </div>
                 </div>
-            </div>
+            )}
             {error && (
                 <p className="mt-2 text-xs text-red-600">Gagal kirim: {error}</p>
             )}
