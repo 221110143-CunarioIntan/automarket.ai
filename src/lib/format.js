@@ -13,11 +13,20 @@ export const txLabel = (t) => {
 
 export const formatBrand = (raw) => BRAND_LABEL[raw] ?? raw;
 
+// Force UTC — Postgres TIMESTAMP (no tz) omits Z, JS Date() would treat it as local.
+const asUtcDate = (raw) => {
+    if (!raw) return null;
+    const hasTz = /Z|[+-]\d\d:?\d\d$/.test(raw);
+    return new Date(hasTz ? raw : `${raw}Z`);
+};
+
 export const formatRelativeTime = (dateString) => {
-    const diff = (Date.now() - new Date(dateString).getTime()) / 1000;
+    const date = asUtcDate(dateString);
+    if (!date) return "";
+    const diff = Math.max(0, (Date.now() - date.getTime()) / 1000);
     if (diff < 60) return `${Math.floor(diff)} detik lalu`;
     if (diff < 3600) return `${Math.floor(diff / 60)} menit lalu`;
     if (diff < 86400) return `${Math.floor(diff / 3600)} jam lalu`;
     if (diff < 2592000) return `${Math.floor(diff / 86400)} hari lalu`;
-    return new Date(dateString).toLocaleDateString("id-ID");
+    return date.toLocaleDateString("id-ID");
 };
