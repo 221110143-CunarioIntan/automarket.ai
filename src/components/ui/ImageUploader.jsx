@@ -1,5 +1,6 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { LuImagePlus, LuX } from "react-icons/lu";
+import Lightbox from "./Lightbox";
 
 const ACCEPT = "image/jpeg,image/png,image/webp";
 const DEFAULT_MAX = 5;
@@ -12,6 +13,7 @@ const ImageUploader = ({
     disabled,
 }) => {
     const inputRef = useRef(null);
+    const [lightboxIndex, setLightboxIndex] = useState(null);
 
     const handleAdd = (event) => {
         const files = Array.from(event.target.files ?? []).slice(
@@ -46,7 +48,8 @@ const ImageUploader = ({
                 {value.map((item, i) => (
                     <div
                         key={item.previewUrl}
-                        className="group relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-100"
+                        onClick={() => setLightboxIndex(i)}
+                        className="group relative aspect-square cursor-zoom-in overflow-hidden rounded-lg border border-slate-200 bg-slate-100"
                     >
                         <img
                             src={item.previewUrl}
@@ -55,7 +58,10 @@ const ImageUploader = ({
                         />
                         <button
                             type="button"
-                            onClick={() => handleRemove(i)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleRemove(i);
+                            }}
                             disabled={disabled}
                             className="absolute top-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition group-hover:opacity-100 disabled:cursor-not-allowed"
                             aria-label="Hapus gambar"
@@ -92,6 +98,13 @@ const ImageUploader = ({
                 {value.length}/{max} gambar. JPG, PNG, atau WebP. Gambar pertama
                 jadi thumbnail utama.
             </p>
+
+            <Lightbox
+                open={lightboxIndex !== null}
+                onClose={() => setLightboxIndex(null)}
+                images={value.map((item) => item.previewUrl)}
+                initialIndex={lightboxIndex ?? 0}
+            />
         </div>
     );
 };

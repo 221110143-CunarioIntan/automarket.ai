@@ -11,7 +11,7 @@ import {
     LuShare2,
 } from "react-icons/lu";
 import { CommentSection } from "@/components/comments";
-import { Button, ErrorState, NotFoundState } from "@/components/ui";
+import { Button, ErrorState, Lightbox, NotFoundState } from "@/components/ui";
 import { useFetchData } from "@/hooks";
 import {
     formatBrand,
@@ -163,6 +163,7 @@ const ImageGallery = ({ vehicle }) => {
     const Icon = vehicle.type === "CAR" ? LuCar : LuBike;
     const images = getSortedImages(vehicle);
     const [current, setCurrent] = useState(0);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
 
     if (!images.length) {
         return (
@@ -172,17 +173,25 @@ const ImageGallery = ({ vehicle }) => {
         );
     }
 
-    const prev = () =>
+    const prev = (e) => {
+        e.stopPropagation();
         setCurrent((c) => (c - 1 + images.length) % images.length);
-    const next = () => setCurrent((c) => (c + 1) % images.length);
+    };
+    const next = (e) => {
+        e.stopPropagation();
+        setCurrent((c) => (c + 1) % images.length);
+    };
 
     return (
         <div className="space-y-3">
-            <div className="relative flex aspect-video items-center justify-center overflow-hidden rounded-2xl bg-slate-200">
+            <div
+                onClick={() => setLightboxOpen(true)}
+                className="group relative flex aspect-video cursor-zoom-in items-center justify-center overflow-hidden rounded-2xl bg-slate-200"
+            >
                 <img
                     src={images[current].original_url}
                     alt={`${formatBrand(vehicle.brand)} ${vehicle.model} — ${current + 1}`}
-                    className="h-full w-full object-cover"
+                    className="h-full w-full object-cover transition group-hover:scale-[1.02]"
                 />
                 {images.length > 1 && (
                     <>
@@ -232,6 +241,13 @@ const ImageGallery = ({ vehicle }) => {
                     ))}
                 </div>
             )}
+
+            <Lightbox
+                open={lightboxOpen}
+                onClose={() => setLightboxOpen(false)}
+                images={images.map((img) => img.original_url)}
+                initialIndex={current}
+            />
         </div>
     );
 };

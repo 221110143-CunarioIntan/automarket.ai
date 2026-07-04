@@ -9,6 +9,7 @@ export { default as ErrorState } from "./ErrorState";
 export { default as ForbiddenState } from "./ForbiddenState";
 export { default as ImageUploader } from "./ImageUploader";
 export { default as Input } from "./Input";
+export { default as Lightbox } from "./Lightbox";
 export { default as InputNumber } from "./InputNumber";
 export { default as InputPassword } from "./InputPassword";
 export { default as LogoText } from "./LogoText";
