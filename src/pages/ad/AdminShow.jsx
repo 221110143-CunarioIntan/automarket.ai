@@ -12,6 +12,7 @@ import {
     LuUser,
     LuX,
 } from "react-icons/lu";
+import { CommentSection } from "@/components/comments";
 import {
     Avatar,
     Badge,
@@ -119,6 +120,10 @@ const AdminShow = () => {
                     <ImageCard vehicle={vehicle} />
                     <OverviewCard vehicle={vehicle} />
                     <DescriptionCard vehicle={vehicle} />
+                    <CommentSection
+                        vehicleId={vehicle.id}
+                        ownerId={vehicle.user_id}
+                    />
                 </div>
 
                 <div className="space-y-6 lg:sticky lg:top-32 lg:self-start">

@@ -10,6 +10,7 @@ import {
     LuHeart,
     LuShare2,
 } from "react-icons/lu";
+import { CommentSection } from "@/components/comments";
 import { Button, ErrorState, NotFoundState } from "@/components/ui";
 import { useFetchData } from "@/hooks";
 import {
@@ -94,6 +95,10 @@ const Show = () => {
                     <ImageGallery vehicle={vehicle} />
                     <OverviewCard vehicle={vehicle} />
                     <DescriptionCard vehicle={vehicle} />
+                    <CommentSection
+                        vehicleId={vehicle.id}
+                        ownerId={vehicle.user_id}
+                    />
                 </div>
 
                 <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">

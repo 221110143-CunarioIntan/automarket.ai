@@ -7,6 +7,7 @@ import {
     LuCar,
     LuClock,
 } from "react-icons/lu";
+import { CommentSection } from "@/components/comments";
 import {
     Badge,
     Button,
@@ -111,6 +112,10 @@ const UserShow = () => {
                     <ImageCard vehicle={vehicle} />
                     <OverviewCard vehicle={vehicle} />
                     <DescriptionCard vehicle={vehicle} />
+                    <CommentSection
+                        vehicleId={vehicle.id}
+                        ownerId={vehicle.user_id}
+                    />
                 </div>
 
                 <div className="space-y-6 lg:sticky lg:top-6 lg:self-start">
