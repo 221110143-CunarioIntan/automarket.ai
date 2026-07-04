@@ -6,7 +6,7 @@ const Dropdown = ({ trigger, children, align = "right", className }) => (
         {trigger}
         <div
             className={cn(
-                "invisible absolute top-full z-20 w-56 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100",
+                "invisible absolute top-full z-40 w-56 pt-2 opacity-0 transition group-hover:visible group-hover:opacity-100",
                 align === "right" ? "right-0" : "left-0",
             )}
         >
