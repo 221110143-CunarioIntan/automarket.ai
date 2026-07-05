@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 
-const Input = ({ label, id, required, error, className, ...props }) => (
+const Input = ({ label, id, required, error, hint, className, ...props }) => (
     <div className="w-full">
         {label && (
             <label
@@ -25,7 +25,11 @@ const Input = ({ label, id, required, error, className, ...props }) => (
             )}
             {...props}
         />
-        {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
+        {error ? (
+            <p className="mt-1 text-xs text-red-600">{error}</p>
+        ) : hint ? (
+            <p className="mt-1 text-xs text-slate-500">{hint}</p>
+        ) : null}
     </div>
 );
 

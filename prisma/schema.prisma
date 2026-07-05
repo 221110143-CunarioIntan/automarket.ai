@@ -138,6 +138,7 @@ model Vehicle {
     mileage      Int
     location     String?
     engineCc     Int?           @map("engine_cc")
+    whatsapp     String?
     description  String?
     images       VehicleImage[]
     comments     Comment[]

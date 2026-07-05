@@ -75,6 +75,7 @@ const UserCreate = () => {
                 mileage: Number(form.mileage),
                 location: form.location?.trim() || null,
                 engine_cc: form.engine_cc ? Number(form.engine_cc) : null,
+                whatsapp: form.whatsapp?.trim() || null,
                 description: form.description?.trim() || null,
                 status: "PENDING",
             })
@@ -291,7 +292,7 @@ const UserCreate = () => {
                     </div>
                 </FormSection>
 
-                <FormSection title="Harga & Lokasi">
+                <FormSection title="Harga & Kontak">
                     <div className="grid grid-cols-2 gap-4">
                         <Controller
                             control={control}
@@ -321,6 +322,23 @@ const UserCreate = () => {
                             placeholder="e.g. Medan, Sumatera Utara"
                             error={errors.location?.message}
                             {...register("location")}
+                        />
+                        <Input
+                            label="No. WhatsApp"
+                            id="whatsapp"
+                            type="tel"
+                            required
+                            placeholder="e.g. 081234567890"
+                            hint="Nomor ini yang akan dikontak calon pembeli lewat WhatsApp."
+                            error={errors.whatsapp?.message}
+                            {...register("whatsapp", {
+                                required: "No. WhatsApp wajib diisi",
+                                pattern: {
+                                    value: /^(\+?62|0)8[0-9]{8,12}$/,
+                                    message:
+                                        "Format tidak valid. Contoh: 081234567890",
+                                },
+                            })}
                         />
                     </div>
                 </FormSection>

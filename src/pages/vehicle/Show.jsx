@@ -10,13 +10,15 @@ import {
     LuHeart,
     LuShare2,
 } from "react-icons/lu";
+import { FaWhatsapp } from "react-icons/fa6";
 import { CommentSection } from "@/components/comments";
-import { Button, ErrorState, Lightbox, NotFoundState } from "@/components/ui";
+import { ErrorState, Lightbox, NotFoundState } from "@/components/ui";
 import { useFetchData } from "@/hooks";
 import {
     formatBrand,
     formatCurrency,
     fuelLabel,
+    normalizeWhatsapp,
     txLabel,
 } from "@/lib/format";
 import { sampleRandom } from "@/lib/random";
@@ -47,10 +49,11 @@ const fetchSimilarVehicles = async (type, excludeId, limit = 4) => {
 
 const Show = () => {
     const { id } = useParams();
-    const { data: vehicle, loading, error } = useFetchData(
-        () => fetchVehicleById(id),
-        [id],
-    );
+    const {
+        data: vehicle,
+        loading,
+        error,
+    } = useFetchData(() => fetchVehicleById(id), [id]);
 
     if (loading) return <ShowSkeleton />;
     if (error)
@@ -345,10 +348,7 @@ const PurchaseCard = ({ vehicle }) => {
             </p>
 
             <div className="mt-5 space-y-2">
-                <Button className="w-full">Booking</Button>
-                <Button variant="outline" className="w-full">
-                    Seller Contact
-                </Button>
+                <ContactSellerButton vehicle={vehicle} />
                 <Link
                     to={`/compare?v1=${vehicle.id}`}
                     className="flex w-full items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100"
@@ -375,6 +375,35 @@ const PurchaseCard = ({ vehicle }) => {
                 </button>
             </div>
         </div>
+    );
+};
+
+const ContactSellerButton = ({ vehicle }) => {
+    const waNumber = normalizeWhatsapp(vehicle.whatsapp);
+    if (!waNumber) {
+        return (
+            <button
+                type="button"
+                disabled
+                className="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg bg-slate-200 py-2.5 text-sm font-medium text-slate-500"
+            >
+                Kontak tidak tersedia
+            </button>
+        );
+    }
+    const message = encodeURIComponent(
+        `Halo, saya tertarik dengan iklan ${formatBrand(vehicle.brand)} ${vehicle.model} ${vehicle.year} yang harganya ${formatCurrency(vehicle.price_cash)}. Apakah masih tersedia?`,
+    );
+    return (
+        <a
+            href={`https://wa.me/${waNumber}?text=${message}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-2.5 text-sm font-medium text-white transition hover:bg-green-700"
+        >
+            <FaWhatsapp className="h-4 w-4" />
+            Contact Seller
+        </a>
     );
 };
 
@@ -419,6 +448,5 @@ const ShowSkeleton = () => (
         </div>
     </div>
 );
-
 
 export default Show;

@@ -13,6 +13,17 @@ export const txLabel = (t) => {
 
 export const formatBrand = (raw) => BRAND_LABEL[raw] ?? raw;
 
+// "0812..." / "+6281..." / "62812..." → "62812..." (wa.me-ready).
+export const normalizeWhatsapp = (raw) => {
+    if (!raw) return null;
+    const digits = String(raw).replace(/\D/g, "");
+    if (!digits) return null;
+    if (digits.startsWith("62")) return digits;
+    if (digits.startsWith("0")) return `62${digits.slice(1)}`;
+    if (digits.startsWith("8")) return `62${digits}`;
+    return digits;
+};
+
 // Force UTC — Postgres TIMESTAMP (no tz) omits Z, JS Date() would treat it as local.
 const asUtcDate = (raw) => {
     if (!raw) return null;
