@@ -11,6 +11,7 @@ import {
 import { AdminDashboard } from "@/pages/admin";
 import * as Auth from "@/pages/auth";
 import { Compare } from "@/pages/compare";
+import { Contact } from "@/pages/contact";
 import { Home } from "@/pages/home";
 import { Search } from "@/pages/search";
 import { List as VehicleList, ShowVehicle } from "@/pages/vehicle";
@@ -23,6 +24,7 @@ export const router = createBrowserRouter([
             { path: "/vehicles", element: <VehicleList /> },
             { path: "/vehicle/:id", element: <ShowVehicle /> },
             { path: "/compare", element: <Compare /> },
+            { path: "/contact", element: <Contact /> },
             { path: "/ads/create", element: <UserCreate /> },
             { path: "/ads/mine", element: <UserList /> },
             { path: "/ads/mine/:id", element: <UserShow /> },
