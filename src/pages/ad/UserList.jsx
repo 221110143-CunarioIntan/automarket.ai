@@ -6,11 +6,12 @@ import { useFetchData } from "@/hooks";
 import { AD_STATUS_COLOR, AD_STATUS_LABEL } from "@/lib/enums";
 import { formatBrand, formatCurrency } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
+import { getFirstImageUrl } from "@/lib/vehicleImages";
 
 const fetchMyVehicles = async (userId) => {
     const { data, error } = await supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(webp_url, order)")
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
     if (error) throw error;
@@ -88,14 +89,24 @@ const UserListContent = ({ userId }) => {
 
 const VehicleRow = ({ vehicle }) => {
     const Icon = vehicle.type === "CAR" ? LuCar : LuBike;
+    const thumbUrl = getFirstImageUrl(vehicle);
     return (
         <li>
             <Link
                 to={`/ads/mine/${vehicle.id}`}
                 className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-slate-300 hover:shadow-sm"
             >
-                <div className="flex h-20 w-28 shrink-0 items-center justify-center rounded-lg bg-slate-200">
-                    <Icon className="h-10 w-10 text-slate-400" />
+                <div className="flex h-20 w-28 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-slate-200">
+                    {thumbUrl ? (
+                        <img
+                            src={thumbUrl}
+                            alt={`${formatBrand(vehicle.brand)} ${vehicle.model}`}
+                            loading="lazy"
+                            className="h-full w-full object-cover"
+                        />
+                    ) : (
+                        <Icon className="h-10 w-10 text-slate-400" />
+                    )}
                 </div>
 
                 <div className="min-w-0 flex-1">
