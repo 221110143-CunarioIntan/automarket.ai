@@ -5,6 +5,7 @@ import { useDebounce, useFetchData } from "@/hooks";
 import { BRAND_LABEL } from "@/lib/enums";
 import { formatBrand, formatCurrency } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
+import { getFirstImageUrl } from "@/lib/vehicleImages";
 
 // Same search shape as the Search page: ilike on model/body_type + brand enum match.
 const sanitize = (s) => s.replace(/[%,()]/g, "").trim();
@@ -18,7 +19,7 @@ const matchBrandEnums = (needle) =>
 const fetchVehicles = async ({ q, type, excludeId }) => {
     let query = supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(webp_url, order)")
         .eq("status", "APPROVED")
         .order("created_at", { ascending: false })
         .limit(20);
@@ -113,6 +114,7 @@ const ResultList = ({ data, loading, error, onSelect }) => {
         <ul className="space-y-2">
             {data.map((v) => {
                 const Icon = v.type === "CAR" ? LuCar : LuBike;
+                const thumbUrl = getFirstImageUrl(v);
                 return (
                     <li key={v.id}>
                         <button
@@ -120,8 +122,17 @@ const ResultList = ({ data, loading, error, onSelect }) => {
                             onClick={() => onSelect(v)}
                             className="flex w-full items-center gap-3 rounded-lg border border-slate-200 p-2 text-left hover:border-blue-400 hover:bg-blue-50/40"
                         >
-                            <div className="flex h-12 w-16 shrink-0 items-center justify-center rounded-md bg-slate-200">
-                                <Icon className="h-6 w-6 text-slate-400" />
+                            <div className="flex h-12 w-16 shrink-0 items-center justify-center overflow-hidden rounded-md bg-slate-200">
+                                {thumbUrl ? (
+                                    <img
+                                        src={thumbUrl}
+                                        alt={`${formatBrand(v.brand)} ${v.model}`}
+                                        loading="lazy"
+                                        className="h-full w-full object-cover"
+                                    />
+                                ) : (
+                                    <Icon className="h-6 w-6 text-slate-400" />
+                                )}
                             </div>
                             <div className="min-w-0 flex-1">
                                 <p className="truncate text-sm font-semibold text-slate-900">

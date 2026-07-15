@@ -5,13 +5,14 @@ import { useFetchData } from "@/hooks";
 import { cn } from "@/lib/cn";
 import { formatBrand, formatCurrency, fuelLabel } from "@/lib/format";
 import { supabase } from "@/lib/supabase";
+import { getFirstImageUrl } from "@/lib/vehicleImages";
 import VehiclePicker from "./VehiclePicker";
 
 const fetchById = async (id) => {
     if (!id) return null;
     const { data, error } = await supabase
         .from("vehicles")
-        .select("*")
+        .select("*, vehicle_images(webp_url, order)")
         .eq("id", id)
         .eq("status", "APPROVED")
         .maybeSingle();
@@ -180,6 +181,7 @@ const SlotCard = ({ slot, state, onPick, onRemove }) => {
         );
 
     const Icon = vehicle.type === "CAR" ? LuCar : LuBike;
+    const thumbUrl = getFirstImageUrl(vehicle);
     return (
         <div className="relative">
             <button
@@ -190,8 +192,16 @@ const SlotCard = ({ slot, state, onPick, onRemove }) => {
             >
                 <LuX className="h-4 w-4" />
             </button>
-            <div className="flex aspect-video items-center justify-center rounded-xl bg-slate-200">
-                <Icon className="h-14 w-14 text-slate-400" />
+            <div className="flex aspect-video items-center justify-center overflow-hidden rounded-xl bg-slate-200">
+                {thumbUrl ? (
+                    <img
+                        src={thumbUrl}
+                        alt={`${formatBrand(vehicle.brand)} ${vehicle.model}`}
+                        className="h-full w-full object-cover"
+                    />
+                ) : (
+                    <Icon className="h-14 w-14 text-slate-400" />
+                )}
             </div>
             <p className="mt-3 truncate font-bold text-slate-900">
                 {formatBrand(vehicle.brand)} {vehicle.model}
