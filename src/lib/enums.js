@@ -158,6 +158,13 @@ export const TRANSMISSION_OPTIONS = toOptions({
     Kopling: "Kopling",
 });
 
+export const CAR_TRANSMISSION_OPTIONS = toOptions({
+    Manual: "Manual",
+    Automatic: "Automatic",
+});
+
+export const MOTOR_TRANSMISSION_OPTIONS = TRANSMISSION_OPTIONS;
+
 export const FUEL_OPTIONS = toOptions({
     Gasoline: "Gasoline",
     Diesel: "Diesel",

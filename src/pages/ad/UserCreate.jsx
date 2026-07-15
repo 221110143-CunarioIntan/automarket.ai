@@ -14,9 +14,10 @@ import { useAuth } from "@/contexts";
 import {
     BRAND_OPTIONS,
     CAR_BODY_OPTIONS,
+    CAR_TRANSMISSION_OPTIONS,
     FUEL_OPTIONS,
     MOTOR_BODY_OPTIONS,
-    TRANSMISSION_OPTIONS,
+    MOTOR_TRANSMISSION_OPTIONS,
     VEHICLE_TYPE_OPTIONS,
 } from "@/lib/enums";
 import { supabase } from "@/lib/supabase";
@@ -50,6 +51,10 @@ const UserCreate = () => {
     const vehicleType = watch("type");
     const bodyTypeOptions =
         vehicleType === "MOTOR" ? MOTOR_BODY_OPTIONS : CAR_BODY_OPTIONS;
+    const transmissionOptions =
+        vehicleType === "MOTOR"
+            ? MOTOR_TRANSMISSION_OPTIONS
+            : CAR_TRANSMISSION_OPTIONS;
 
     if (authLoading) return null;
     if (!user) {
@@ -223,7 +228,7 @@ const UserCreate = () => {
                                     label="Transmission"
                                     required
                                     error={fieldState.error?.message}
-                                    options={TRANSMISSION_OPTIONS}
+                                    options={transmissionOptions}
                                     value={field.value}
                                     onChange={field.onChange}
                                 />
