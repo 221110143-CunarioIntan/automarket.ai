@@ -5,6 +5,7 @@ import {
     AdminList,
     AdminShow,
     UserCreate,
+    UserEdit,
     UserList,
     UserShow,
 } from "@/pages/ad";
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
             { path: "/ads/create", element: <UserCreate /> },
             { path: "/ads/mine", element: <UserList /> },
             { path: "/ads/mine/:id", element: <UserShow /> },
+            { path: "/ads/mine/:id/edit", element: <UserEdit /> },
         ],
     },
     {

@@ -320,6 +320,15 @@ const SummaryCard = ({ vehicle }) => {
                 {formatCurrency(vehicle.price_cash)}
             </p>
 
+            {vehicle.status === "PENDING" && (
+                <Link
+                    to={`/ads/mine/${vehicle.id}/edit`}
+                    className="mt-5 block"
+                >
+                    <Button className="w-full">Edit Iklan</Button>
+                </Link>
+            )}
+
             {vehicle.status === "APPROVED" && (
                 <Link
                     to={`/vehicle/${vehicle.id}`}

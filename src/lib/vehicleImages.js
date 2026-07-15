@@ -63,3 +63,31 @@ export const uploadVehicleImages = async (vehicleId, items) => {
         items.map((item, i) => uploadVehicleImage(vehicleId, item.file, i)),
     );
 };
+
+const pathFromPublicUrl = (url) => {
+    const marker = `/object/public/${BUCKET}/`;
+    const idx = url?.indexOf(marker) ?? -1;
+    return idx === -1 ? null : url.slice(idx + marker.length);
+};
+
+// Delete one image row + its storage objects (original + webp). Storage first so
+// a failure leaves the row intact (nothing deleted → clean retry) rather than a
+// row pointing at missing files.
+export const deleteVehicleImage = async (image) => {
+    const paths = [image.original_url, image.webp_url]
+        .map(pathFromPublicUrl)
+        .filter(Boolean);
+    if (paths.length) {
+        const { error: storageErr } = await supabase.storage
+            .from(BUCKET)
+            .remove(paths);
+        if (storageErr)
+            throw new Error(`Hapus file gagal: ${storageErr.message}`);
+    }
+
+    const { error: rowErr } = await supabase
+        .from("vehicle_images")
+        .delete()
+        .eq("id", image.id);
+    if (rowErr) throw new Error(`Hapus row gagal: ${rowErr.message}`);
+};
