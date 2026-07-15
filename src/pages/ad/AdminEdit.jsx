@@ -117,7 +117,7 @@ const EditForm = ({ vehicle }) => {
                 body_type: form.body_type,
                 color: form.color?.trim() || null,
                 transmission: form.transmission,
-                fuel: form.type === "MOTOR" ? null : form.fuel,
+                fuel: form.fuel,
                 mileage: Number(form.mileage),
                 engine_cc: form.engine_cc ? Number(form.engine_cc) : null,
             })
@@ -264,28 +264,21 @@ const EditForm = ({ vehicle }) => {
                                 />
                             )}
                         />
-                        {vehicleType === "CAR" && (
-                            <Controller
-                                control={control}
-                                name="fuel"
-                                rules={{
-                                    required:
-                                        vehicleType === "CAR"
-                                            ? "Fuel wajib dipilih"
-                                            : false,
-                                }}
-                                render={({ field, fieldState }) => (
-                                    <Select
-                                        label="Fuel"
-                                        required
-                                        error={fieldState.error?.message}
-                                        options={FUEL_OPTIONS}
-                                        value={field.value}
-                                        onChange={field.onChange}
-                                    />
-                                )}
-                            />
-                        )}
+                        <Controller
+                            control={control}
+                            name="fuel"
+                            rules={{ required: "Fuel wajib dipilih" }}
+                            render={({ field, fieldState }) => (
+                                <Select
+                                    label="Fuel"
+                                    required
+                                    error={fieldState.error?.message}
+                                    options={FUEL_OPTIONS}
+                                    value={field.value}
+                                    onChange={field.onChange}
+                                />
+                            )}
+                        />
                         <Input
                             label="Engine CC"
                             id="engine_cc"
