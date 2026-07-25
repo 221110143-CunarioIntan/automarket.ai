@@ -1,7 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { Navigate, Outlet } from "react-router-dom";
 import { LogoText } from "@/components/ui";
+import { useAuth } from "@/contexts";
 
 const AuthShell = () => {
+    const { user, profile, loading } = useAuth();
+
+    if (loading) return null;
+    if (user && profile)
+        return (
+            <Navigate
+                to={profile.role === "ADMIN" ? "/admin/dashboard" : "/"}
+                replace
+            />
+        );
+
     return (
         <div className="flex min-h-screen">
             <div className="flex w-full flex-col bg-white lg:w-1/2">

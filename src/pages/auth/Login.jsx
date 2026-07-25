@@ -16,18 +16,25 @@ const Login = () => {
         setError(null);
         setSubmitting(true);
 
-        const { error: authError } = await supabase.auth.signInWithPassword({
-            email,
-            password,
-        });
-        setSubmitting(false);
+        const { data, error: authError } =
+            await supabase.auth.signInWithPassword({ email, password });
 
         if (authError) {
+            setSubmitting(false);
             setError(authErrorMessage(authError));
             return;
         }
 
-        navigate("/");
+        const { data: profile } = await supabase
+            .from("users")
+            .select("role")
+            .eq("id", data.user.id)
+            .single();
+        setSubmitting(false);
+
+        navigate(profile?.role === "ADMIN" ? "/admin/dashboard" : "/", {
+            replace: true,
+        });
     };
 
     return (
