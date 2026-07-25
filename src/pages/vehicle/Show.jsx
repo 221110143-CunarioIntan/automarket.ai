@@ -13,6 +13,7 @@ import {
 import { FaWhatsapp } from "react-icons/fa6";
 import { CommentSection } from "@/components/comments";
 import { ErrorState, Lightbox, NotFoundState } from "@/components/ui";
+import { useAuth } from "@/contexts";
 import { useFetchData } from "@/hooks";
 import {
     formatBrand,
@@ -379,7 +380,19 @@ const PurchaseCard = ({ vehicle }) => {
 };
 
 const ContactSellerButton = ({ vehicle }) => {
+    const { user } = useAuth();
     const waNumber = normalizeWhatsapp(vehicle.whatsapp);
+    if (!user) {
+        return (
+            <Link
+                to="/login"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-600 py-2.5 text-sm font-medium text-white transition hover:bg-green-700"
+            >
+                <FaWhatsapp className="h-4 w-4" />
+                Login untuk Contact Seller
+            </Link>
+        );
+    }
     if (!waNumber) {
         return (
             <button
